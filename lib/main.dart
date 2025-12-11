@@ -3951,8 +3951,17 @@ class _GemStorePageState extends State<GemStorePage> {
 
     // In-app purchase kullanılabilir mi kontrol et
     if (!IAPService.isAvailable) {
-      // Servis kullanılamıyorsa demo satın alma göster
-      _showDemoPurchase(gems, bonus);
+      // Servis kullanılamıyorsa uyarı göster
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              '❌ Satın alma servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
@@ -3985,49 +3994,6 @@ class _GemStorePageState extends State<GemStorePage> {
         ).showSnackBar(SnackBar(content: Text('Hata: $e')));
       }
     }
-  }
-
-  // Demo satın alma (in-app purchase kullanılamazsa)
-  void _showDemoPurchase(int gems, int bonus) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('💳 Demo Satın Alma'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('In-app purchase şu anda kullanılamıyor.'),
-            const SizedBox(height: 10),
-            const Text('Demo modunda elmaslar ücretsiz ekleniyor.'),
-            const SizedBox(height: 20),
-            Text(
-              '$gems elmas eklenecek',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('İptal'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await CurrencyManager.addGems(gems);
-              if (mounted) {
-                setState(() {});
-                Navigator.pop(ctx);
-                _showSuccessDialog(gems, 0);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00BCD4),
-            ),
-            child: const Text('Satın Al (Demo)'),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showSuccessDialog(int gems, int bonus) {
@@ -4677,37 +4643,17 @@ class _SettingsSheetState extends State<SettingsSheet> {
 
   Future<void> _purchaseNoAdsSubscription() async {
     if (!IAPService.isAvailable) {
-      // Demo mode
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('🚫 Demo Mod'),
-          content: const Text(
-            'In-app purchase kullanılamıyor.\nDemo modda reklamsız abonelik aktifleştiriliyor.',
+      // Servis kullanılamazsa uyarı göster
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              '❌ Satın alma servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.',
+            ),
+            backgroundColor: Colors.red,
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('İptal'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await IAPService.activateNoAdsSubscription();
-                Navigator.pop(ctx);
-                _checkSubscription();
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('✅ Reklamsız abonelik aktifleştirildi!'),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Aktifleştir'),
-            ),
-          ],
-        ),
-      );
+        );
+      }
       return;
     }
 
