@@ -21,6 +21,7 @@ import 'models/theme.dart';
 import 'models/player_level.dart';
 import 'models/daily_reward.dart';
 import 'models/special_balloon.dart';
+import 'models/time_record.dart';
 import 'services/sound_manager.dart';
 import 'services/iap_service.dart';
 
@@ -2249,8 +2250,18 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     final nextLevel = widget.levelData!.level + 1;
     final hasNextLevel = nextLevel <= 10;
 
-    // Yıldız hesapla
-    final stars = LevelStars.calculateStars(
+    // Zorluk adını al
+    final difficultyName = widget.levelData!.difficulty == GameDifficulty.kolay
+        ? 'kolay'
+        : widget.levelData!.difficulty == GameDifficulty.orta
+        ? 'orta'
+        : 'zor';
+
+    // Zamana göre yıldız hesapla
+    final timeStars = TimeRecord.getStars(difficultyName, _timeSpent);
+
+    // Eski sistem ile birleştir (maksimum yıldız al)
+    final scoreStars = LevelStars.calculateStars(
       score: _score,
       targetScore: widget.levelData!.targetScore,
       timeSpent: _timeSpent,
@@ -2258,12 +2269,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       mistakes: _mistakes,
     );
 
+    final stars = max(timeStars, scoreStars);
+
+    // En iyi zamanı kaydet
+    TimeRecord.saveBestTime(difficultyName, _timeSpent);
+
     // Yıldızları kaydet
-    final difficultyName = widget.levelData!.difficulty == GameDifficulty.kolay
-        ? 'kolay'
-        : widget.levelData!.difficulty == GameDifficulty.orta
-        ? 'orta'
-        : 'zor';
     LevelStars.setStars(difficultyName, widget.levelData!.level, stars);
 
     // Elmas kazan (yıldız sayısına göre)
@@ -2344,6 +2355,66 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Süre:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        TimeRecord.formatTime(_timeSpent),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  FutureBuilder<int?>(
+                    future: TimeRecord.getBestTime(difficultyName),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        final bestTime = snapshot.data!;
+                        final isNewRecord = _timeSpent < bestTime;
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "En İyi Süre:",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  TimeRecord.formatTime(
+                                    min(_timeSpent, bestTime),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: isNewRecord
+                                        ? Colors.green
+                                        : Colors.blue,
+                                  ),
+                                ),
+                                if (isNewRecord) ...[
+                                  const SizedBox(width: 5),
+                                  const Icon(
+                                    Icons.emoji_events,
+                                    color: Colors.amber,
+                                    size: 16,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2541,6 +2612,40 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                         ),
                         icon: const Icon(Icons.pause, color: Colors.white),
                         onPressed: _showPauseMenu,
+                      ),
+
+                      // Zamanlayıcı
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.timer,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              TimeRecord.formatTime(_timeSpent),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'monospace',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
                       // Skor göstergesi
