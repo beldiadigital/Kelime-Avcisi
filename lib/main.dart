@@ -1940,6 +1940,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   async.Timer? _slowTimer;
   async.Timer? _speedTimer;
 
+  // Banner reklam
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
     super.initState();
@@ -1947,6 +1951,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    _loadBannerAd();
 
     _game = BubbleGame(
       difficulty: widget.difficulty,
@@ -2467,14 +2472,46 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   }
 
   @override
-  @override
   void dispose() {
     _comboController.dispose();
     _gameTimer?.cancel();
     _goldTimer?.cancel();
     _slowTimer?.cancel();
     _speedTimer?.cancel();
+    _bannerAd?.dispose();
     super.dispose();
+  }
+
+  void _loadBannerAd() async {
+    // Reklamsız abonelik varsa reklam yükleme
+    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+    if (hasSubscription) {
+      setState(() {
+        _isBannerAdReady = false;
+      });
+      return;
+    }
+
+    _bannerAd = BannerAd(
+      adUnitId: AdMobHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          if (mounted) {
+            setState(() {
+              _isBannerAdReady = true;
+            });
+          }
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Oyun banner reklam yüklenemedi: $err');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+    _bannerAd!.load();
   }
 
   @override
@@ -2640,6 +2677,19 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
+              ),
+            ),
+
+          // Banner Reklam - Alt kısımda
+          if (_isBannerAdReady && _bannerAd != null)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 50,
+                color: Colors.black,
+                child: AdWidget(ad: _bannerAd!),
               ),
             ),
         ],
