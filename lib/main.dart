@@ -30,11 +30,24 @@ import 'services/iap_service.dart';
 
 // ADMOB YÖNETİMİ
 class AdMobHelper {
+  // Test modunu açmak için true yapın
+  static const bool isTestMode = true;
+
   static String get bannerAdUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-9098317866883430/5233275608';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-9098317866883430/5233275608'; // Banner ID'si
+    if (isTestMode) {
+      // Test reklamları
+      if (Platform.isAndroid) {
+        return 'ca-app-pub-3940256099942544/6300978111'; // Test Banner Android
+      } else if (Platform.isIOS) {
+        return 'ca-app-pub-3940256099942544/2934735716'; // Test Banner iOS
+      }
+    } else {
+      // Gerçek reklamlar (production)
+      if (Platform.isAndroid) {
+        return 'ca-app-pub-9098317866883430/5233275608';
+      } else if (Platform.isIOS) {
+        return 'ca-app-pub-9098317866883430/5233275608';
+      }
     }
     throw UnsupportedError('Unsupported platform');
   }
@@ -572,7 +585,16 @@ class _MainMenuPageState extends State<MainMenuPage>
     // _checkDailyReward();
   }
 
-  void _loadBannerAd() {
+  void _loadBannerAd() async {
+    // Reklamsız abonelik varsa reklam yükleme
+    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+    if (hasSubscription) {
+      setState(() {
+        _isBannerAdReady = false;
+      });
+      return;
+    }
+
     _bannerAd = BannerAd(
       adUnitId: AdMobHelper.bannerAdUnitId,
       request: const AdRequest(),
