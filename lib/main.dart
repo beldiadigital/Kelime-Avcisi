@@ -3731,42 +3731,40 @@ class _GemStorePageState extends State<GemStorePage> {
   // Elmas paketleri (sadece gerçek parayla alınabilir)
   final List<Map<String, dynamic>> gemPackages = [
     {
-      'gems': 50,
-      'price': '₺15.99',
-      'priceValue': 15.99,
-      'icon': '💎',
-      'title': '50 Elmas',
-      'description': 'Başlangıç paketi',
-    },
-    {
       'gems': 100,
-      'price': '₺19.99',
-      'priceValue': 19.99,
-      'icon': '💎',
-      'title': '100 Elmas',
-      'description': 'Daha fazla elmas',
-      'bonus': 10, // +10 bonus elmas
-    },
-    {
-      'gems': 200,
       'price': '₺29.99',
       'priceValue': 29.99,
       'icon': '💎',
-      'title': '200 Elmas',
+      'title': '100 Elmas',
+      'description': 'Başlangıç paketi',
+    },
+    {
+      'gems': 250,
+      'price': '₺49.99',
+      'priceValue': 49.99,
+      'icon': '💎',
+      'title': '250 Elmas',
+      'description': 'Popüler seçim',
+    },
+    {
+      'gems': 500,
+      'price': '₺79.99',
+      'priceValue': 79.99,
+      'icon': '💎',
+      'title': '500 Elmas',
       'description': 'En iyi değer',
-      'bonus': 30, // +30 bonus elmas
     },
   ];
 
   Future<void> _purchaseGems(int gems, int bonus, double price) async {
     // Ürün ID'sini belirle
     String productId;
-    if (gems == 50) {
-      productId = IAPService.gems50;
-    } else if (gems == 100) {
+    if (gems == 100) {
       productId = IAPService.gems100;
-    } else if (gems == 200) {
-      productId = IAPService.gems200;
+    } else if (gems == 250) {
+      productId = IAPService.gems250;
+    } else if (gems == 500) {
+      productId = IAPService.gems500;
     } else {
       return;
     }
@@ -3823,7 +3821,7 @@ class _GemStorePageState extends State<GemStorePage> {
             const Text('Demo modunda elmaslar ücretsiz ekleniyor.'),
             const SizedBox(height: 20),
             Text(
-              '${gems + bonus} elmas eklenecek',
+              '$gems elmas eklenecek',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -3835,11 +3833,11 @@ class _GemStorePageState extends State<GemStorePage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await CurrencyManager.addGems(gems + bonus);
+              await CurrencyManager.addGems(gems);
               if (mounted) {
                 setState(() {});
                 Navigator.pop(ctx);
-                _showSuccessDialog(gems, bonus);
+                _showSuccessDialog(gems, 0);
               }
             },
             style: ElevatedButton.styleFrom(
@@ -3866,30 +3864,9 @@ class _GemStorePageState extends State<GemStorePage> {
               '$gems Elmas',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            if (bonus > 0) ...[
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.orange),
-                ),
-                child: Text(
-                  '🎁 Bonus: +$bonus Elmas',
-                  style: const TextStyle(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
             const SizedBox(height: 10),
             Text(
-              'Toplam: ${gems + bonus} Elmas',
+              'Hesabınıza eklendi!',
               style: TextStyle(color: Colors.grey[600], fontSize: 14),
             ),
           ],
@@ -4010,8 +3987,6 @@ class _GemStorePageState extends State<GemStorePage> {
                     final package = gemPackages[index];
                     final isPopular = package['popular'] == true;
                     final isSpecial = package['special'] == true;
-                    final bonus = package['bonus'] ?? 0;
-                    final totalGems = package['gems'] + bonus;
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 15),
@@ -4119,31 +4094,6 @@ class _GemStorePageState extends State<GemStorePage> {
                                           fontSize: 14,
                                         ),
                                       ),
-                                      if (bonus > 0) ...[
-                                        const SizedBox(height: 5),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.orange.withOpacity(
-                                              0.3,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            '🎁 +$bonus Bonus',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
                                     ],
                                   ),
                                 ),
@@ -4151,24 +4101,14 @@ class _GemStorePageState extends State<GemStorePage> {
                                 // Buy button
                                 Column(
                                   children: [
-                                    if (bonus > 0)
-                                      Text(
-                                        '$totalGems 💎',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      )
-                                    else
-                                      Text(
-                                        '${package['gems']} 💎',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    Text(
+                                      '${package['gems']} 💎',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                    ),
                                     const SizedBox(height: 5),
                                     Text(
                                       package['price'],
@@ -4182,7 +4122,7 @@ class _GemStorePageState extends State<GemStorePage> {
                                     ElevatedButton(
                                       onPressed: () => _purchaseGems(
                                         package['gems'],
-                                        bonus,
+                                        0,
                                         package['priceValue'],
                                       ),
                                       style: ElevatedButton.styleFrom(
