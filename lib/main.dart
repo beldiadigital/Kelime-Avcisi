@@ -4594,173 +4594,178 @@ class _SettingsSheetState extends State<SettingsSheet> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
       padding: const EdgeInsets.all(25),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 50,
-            height: 5,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "AYARLAR",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 25),
-          _buildSettingTile(
-            icon: Icons.volume_up,
-            title: "Ses Efektleri",
-            value: SoundManager().soundEnabled,
-            onChanged: (val) async {
-              await SoundManager().toggleSound();
-              setState(() {});
-            },
-          ),
-          const SizedBox(height: 15),
-          _buildSettingTile(
-            icon: Icons.music_note,
-            title: "Müzik",
-            value: SoundManager().musicEnabled,
-            onChanged: (val) async {
-              await SoundManager().toggleMusic();
-              setState(() {});
-            },
-          ),
-          const SizedBox(height: 15),
-          _buildStatTile(
-            icon: Icons.star,
-            title: "Toplam Yıldız",
-            value: "${LevelStars.getAllStars()}/90",
-          ),
-          const SizedBox(height: 15),
-          _buildStatTile(
-            icon: Icons.emoji_events,
-            title: "Başarımlar",
-            value:
-                "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
-          ),
-          const SizedBox(height: 20),
-
-          // Reklamsız abonelik bölümü
-          if (!_hasNoAdsSubscription)
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             Container(
-              padding: const EdgeInsets.all(15),
+              width: 50,
+              height: 5,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.purple.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.block, color: Colors.white, size: 28),
-                      SizedBox(width: 10),
-                      Text(
-                        'Reklamsız Oyna',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "AYARLAR",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 25),
+            _buildSettingTile(
+              icon: Icons.volume_up,
+              title: "Ses Efektleri",
+              value: SoundManager().soundEnabled,
+              onChanged: (val) async {
+                await SoundManager().toggleSound();
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 15),
+            _buildSettingTile(
+              icon: Icons.music_note,
+              title: "Müzik",
+              value: SoundManager().musicEnabled,
+              onChanged: (val) async {
+                await SoundManager().toggleMusic();
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 15),
+            _buildStatTile(
+              icon: Icons.star,
+              title: "Toplam Yıldız",
+              value: "${LevelStars.getAllStars()}/90",
+            ),
+            const SizedBox(height: 15),
+            _buildStatTile(
+              icon: Icons.emoji_events,
+              title: "Başarımlar",
+              value:
+                  "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
+            ),
+            const SizedBox(height: 20),
+
+            // Reklamsız abonelik bölümü
+            if (!_hasNoAdsSubscription)
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Tüm reklamları kaldır',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
-                  ),
-                  const SizedBox(height: 15),
-                  ElevatedButton(
-                    onPressed: _purchaseNoAdsSubscription,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF6A1B9A),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
                     ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Icon(Icons.block, color: Colors.white, size: 28),
+                        SizedBox(width: 10),
                         Text(
-                          '₺49.99/Aylık',
+                          'Reklamsız Oyna',
                           style: TextStyle(
-                            fontSize: 18,
+                            color: Colors.white,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Icon(Icons.arrow_forward),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            )
-          else
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.green, width: 2),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 28),
-                  SizedBox(width: 10),
-                  Text(
-                    'Reklamsız Abonelik Aktif',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Tüm reklamları kaldır',
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: _purchaseNoAdsSubscription,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF6A1B9A),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '₺49.99/Aylık',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.arrow_forward),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.green, width: 2),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green, size: 28),
+                    SizedBox(width: 10),
+                    Text(
+                      'Reklamsız Abonelik Aktif',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          ElevatedButton.icon(
-            onPressed: () {
-              Share.share(
-                'Kelime Avcısı oyununu dene! 🎯\nHarika bir kelime oyunu!',
-                subject: 'Kelime Avcısı',
-              );
-            },
-            icon: const Icon(Icons.share),
-            label: const Text("Arkadaşlarınla Paylaş"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            ElevatedButton.icon(
+              onPressed: () {
+                Share.share(
+                  'Kelime Avcısı oyununu dene! 🎯\nHarika bir kelime oyunu!',
+                  subject: 'Kelime Avcısı',
+                );
+              },
+              icon: const Icon(Icons.share),
+              label: const Text("Arkadaşlarınla Paylaş"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 15,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
