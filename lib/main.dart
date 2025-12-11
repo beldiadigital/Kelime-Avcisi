@@ -4478,6 +4478,114 @@ class SettingsSheet extends StatefulWidget {
 }
 
 class _SettingsSheetState extends State<SettingsSheet> {
+  bool _hasNoAdsSubscription = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSubscription();
+  }
+
+  Future<void> _checkSubscription() async {
+    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+    if (mounted) {
+      setState(() {
+        _hasNoAdsSubscription = hasSubscription;
+      });
+    }
+  }
+
+  Future<void> _purchaseNoAdsSubscription() async {
+    if (!IAPService.isAvailable) {
+      // Demo mode
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('🚫 Demo Mod'),
+          content: const Text(
+            'In-app purchase kullanılamıyor.\nDemo modda reklamsız abonelik aktifleştiriliyor.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('İptal'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await IAPService.activateNoAdsSubscription();
+                Navigator.pop(ctx);
+                _checkSubscription();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('✅ Reklamsız abonelik aktifleştirildi!'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Aktifleştir'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Gerçek satın alma
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final success = await IAPService.buyProduct(IAPService.subscriptionNoAds);
+
+      if (mounted) {
+        Navigator.pop(context); // Loading dialog
+
+        if (success) {
+          await _checkSubscription();
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('✅ Abonelik Başarılı!'),
+              content: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.block, size: 60, color: Colors.green),
+                  SizedBox(height: 20),
+                  Text(
+                    'Artık reklamsız oynayabilirsiniz!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Harika!'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Satın alma başlatılamadı')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Hata: $e')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -4536,6 +4644,104 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
           ),
           const SizedBox(height: 20),
+
+          // Reklamsız abonelik bölümü
+          if (!_hasNoAdsSubscription)
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.purple.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.block, color: Colors.white, size: 28),
+                      SizedBox(width: 10),
+                      Text(
+                        'Reklamsız Oyna',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Tüm reklamları kaldır',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: _purchaseNoAdsSubscription,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF6A1B9A),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '₺49.99/Aylık',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(Icons.arrow_forward),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.green, width: 2),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 28),
+                  SizedBox(width: 10),
+                  Text(
+                    'Reklamsız Abonelik Aktif',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 20),
+
           ElevatedButton.icon(
             onPressed: () {
               Share.share(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/currency.dart';
 
 class IAPService {
@@ -11,7 +12,15 @@ class IAPService {
   static const String gems250 = 'kelimeavcisi_250gems';
   static const String gems500 = 'kelimeavcisi_500gems';
 
-  static const Set<String> _productIds = {gems100, gems250, gems500};
+  // Abonelik ID'si
+  static const String subscriptionNoAds = 'kelimeavcisi_noads_monthly';
+
+  static const Set<String> _productIds = {
+    gems100,
+    gems250,
+    gems500,
+    subscriptionNoAds,
+  };
 
   static List<ProductDetails> _products = [];
   static bool _isAvailable = false;
@@ -69,7 +78,7 @@ class IAPService {
     }
   }
 
-  // Ürünü doğrula ve elmasları ekle
+  // Ürünü doğrula ve elmasları ekle veya aboneliği aktifleştir
   static Future<void> _verifyAndDeliverProduct(PurchaseDetails purchase) async {
     int gemsToAdd = 0;
 
@@ -83,12 +92,33 @@ class IAPService {
       case gems500:
         gemsToAdd = 500;
         break;
+      case subscriptionNoAds:
+        // Reklamsız aboneliği aktifleştir
+        await activateNoAdsSubscription();
+        print('No-ads subscription activated');
+        return;
     }
 
     if (gemsToAdd > 0) {
       await CurrencyManager.addGems(gemsToAdd);
       print('Added $gemsToAdd gems for purchase: ${purchase.productID}');
     }
+  }
+
+  // Reklamsız aboneliği aktifleştir
+  static Future<void> activateNoAdsSubscription() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('noAdsSubscription', true);
+    await prefs.setInt(
+      'noAdsSubscriptionTime',
+      DateTime.now().millisecondsSinceEpoch,
+    );
+  }
+
+  // Reklamsız abonelik aktif mi kontrol et
+  static Future<bool> hasActiveNoAdsSubscription() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('noAdsSubscription') ?? false;
   }
 
   // Bekleyen satın almaları kontrol et
@@ -120,7 +150,12 @@ class IAPService {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
 
     try {
-      return await _instance.buyConsumable(purchaseParam: purchaseParam);
+      // Abonelik ise buyNonConsumable, elmas paketi ise buyConsumable kullan
+      if (productId == subscriptionNoAds) {
+        return await _instance.buyNonConsumable(purchaseParam: purchaseParam);
+      } else {
+        return await _instance.buyConsumable(purchaseParam: purchaseParam);
+      }
     } catch (e) {
       print('Error buying product: $e');
       return false;
