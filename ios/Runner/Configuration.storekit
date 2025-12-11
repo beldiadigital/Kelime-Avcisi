@@ -1,0 +1,125 @@
+{
+  "identifier" : "D31E3CEF",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "15.99",
+      "familyShareable" : false,
+      "internalID" : "6670391668",
+      "localizations" : [
+        {
+          "description" : "50 Elmas Paketi",
+          "displayName" : "50 Elmas",
+          "locale" : "tr"
+        },
+        {
+          "description" : "50 Gems Package",
+          "displayName" : "50 Gems",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "kelimeavcisi_50gems",
+      "referenceName" : "50 Gems",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "6670391670",
+      "localizations" : [
+        {
+          "description" : "100 Elmas + 10 Bonus",
+          "displayName" : "100 Elmas",
+          "locale" : "tr"
+        },
+        {
+          "description" : "100 Gems + 10 Bonus",
+          "displayName" : "100 Gems",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "kelimeavcisi_100gems",
+      "referenceName" : "100 Gems",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "29.99",
+      "familyShareable" : false,
+      "internalID" : "6670391672",
+      "localizations" : [
+        {
+          "description" : "200 Elmas + 30 Bonus",
+          "displayName" : "200 Elmas",
+          "locale" : "tr"
+        },
+        {
+          "description" : "200 Gems + 30 Bonus",
+          "displayName" : "200 Gems",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "kelimeavcisi_200gems",
+      "referenceName" : "200 Gems",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
