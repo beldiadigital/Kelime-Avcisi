@@ -31,7 +31,8 @@ import 'services/iap_service.dart';
 // ADMOB YÖNETİMİ
 class AdMobHelper {
   // Test modunu açmak için true yapın
-  static const bool isTestMode = true;
+  // PRODUCTION İÇİN FALSE YAPMAYI UNUTMAYIN!
+  static const bool isTestMode = false;
 
   static String get bannerAdUnitId {
     if (isTestMode) {
@@ -1934,7 +1935,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
   // Özel balon efektleri
   bool _isGoldActive = false; // 2x puan
+  // ignore: unused_field
   bool _isSlowActive = false; // Yavaşlatma
+  // ignore: unused_field
   bool _isSpeedActive = false; // Hızlandırma
   async.Timer? _goldTimer;
   async.Timer? _slowTimer;
