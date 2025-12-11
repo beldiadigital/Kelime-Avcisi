@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppRatingSystem {
   static const String _keyLaunchCount = 'app_launch_count';
@@ -80,11 +81,21 @@ class AppRatingSystem {
 
   // App Store'da aç
   static Future<void> openAppStore() async {
-    // iOS App Store URL (App ID ile değiştirilmeli)
-    // final url = 'https://apps.apple.com/app/idYOUR_APP_ID';
-    // await launchUrl(Uri.parse(url));
+    // iOS App Store URL - App yayınlandığında ID güncellenecek
+    // Şu an için generic App Store sayfası
+    final url = Uri.parse('https://apps.apple.com/app/id6738322775');
     
-    // Şimdilik sadece işaretle
-    await userRated();
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+        await userRated();
+      } else {
+        // URL açılamazsa sadece işaretle
+        await userRated();
+      }
+    } catch (e) {
+      // Hata durumunda sadece işaretle
+      await userRated();
+    }
   }
 }
