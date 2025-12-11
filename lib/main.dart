@@ -22,6 +22,7 @@ import 'models/player_level.dart';
 import 'models/daily_reward.dart';
 import 'models/special_balloon.dart';
 import 'models/time_record.dart';
+import 'models/app_rating.dart';
 import 'services/sound_manager.dart';
 import 'services/iap_service.dart';
 
@@ -583,8 +584,41 @@ class _MainMenuPageState extends State<MainMenuPage>
       duration: const Duration(seconds: 3),
     );
     _loadBannerAd();
-    // Günlük ödül kontrolü geçici olarak devre dışı
-    // _checkDailyReward();
+
+    // Açılış kontrollerini çalıştır
+    _performStartupChecks();
+  }
+
+  // Oyun açılışında yapılacak kontroller
+  Future<void> _performStartupChecks() async {
+    // Açılış sayısını artır
+    await AppRatingSystem.incrementLaunchCount();
+
+    // Kısa bir gecikme sonrası kontrolleri yap
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // 1. Günlük ödül kontrolü
+    await _checkAndShowDailyReward();
+
+    // 2. Rating isteği kontrolü (günlük ödülden sonra)
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _checkAndShowRatingPrompt();
+  }
+
+  // Günlük ödül kontrolü ve gösterimi
+  Future<void> _checkAndShowDailyReward() async {
+    if (DailyRewardSystem.canClaimToday && mounted) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      _showDailyReward();
+    }
+  }
+
+  // Rating isteği kontrolü ve gösterimi
+  Future<void> _checkAndShowRatingPrompt() async {
+    final shouldShow = await AppRatingSystem.shouldShowRatingPrompt();
+    if (shouldShow && mounted) {
+      _showRatingDialog();
+    }
   }
 
   void _loadBannerAd() async {
@@ -1225,6 +1259,63 @@ class _MainMenuPageState extends State<MainMenuPage>
       context: context,
       barrierDismissible: false,
       builder: (ctx) => DailyRewardDialog(onClaimed: () => setState(() {})),
+    );
+  }
+
+  void _showRatingDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Column(
+          children: [
+            Text('⭐', style: TextStyle(fontSize: 50)),
+            SizedBox(height: 10),
+            Text(
+              'Kelime Avcısı\'nı Beğendiniz mi?',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Oyunumuzu değerlendirerek bize destek olabilirsiniz! Görüşleriniz bizim için çok değerli.',
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              AppRatingSystem.userDeclined();
+              Navigator.pop(ctx);
+            },
+            child: const Text('Hayır, Teşekkürler'),
+          ),
+          TextButton(
+            onPressed: () {
+              AppRatingSystem.userPostponed();
+              Navigator.pop(ctx);
+            },
+            child: const Text('Daha Sonra'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              AppRatingSystem.openAppStore();
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Teşekkürler! 🌟'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            child: const Text('App Store\'da Değerlendir'),
+          ),
+        ],
+      ),
     );
   }
 
