@@ -931,22 +931,27 @@ class _MainMenuPageState extends State<MainMenuPage>
 
   // Oyun açılışında yapılacak kontroller
   Future<void> _performStartupChecks() async {
-    // Açılış sayısını artır
-    await AppRatingSystem.incrementLaunchCount();
+    try {
+      // Açılış sayısını artır
+      await AppRatingSystem.incrementLaunchCount();
 
-    // Kısa bir gecikme sonrası kontrolleri yap
-    await Future.delayed(const Duration(milliseconds: 500));
+      // Kısa bir gecikme sonrası kontrolleri yap
+      await Future.delayed(const Duration(milliseconds: 500));
 
-    // 1. Günlük ödül kontrolü
-    await _checkAndShowDailyReward();
+      // 1. Günlük ödül kontrolü
+      await _checkAndShowDailyReward();
 
-    // 2. Rating isteği kontrolü (günlük ödülden sonra)
-    await Future.delayed(const Duration(milliseconds: 500));
-    await _checkAndShowRatingPrompt();
+      // 2. Rating isteği kontrolü (günlük ödülden sonra)
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _checkAndShowRatingPrompt();
 
-    // 3. Reklam kaldırma teklifi kontrolü
-    await Future.delayed(const Duration(milliseconds: 500));
-    await _checkAndShowRemoveAdsPromotion();
+      // 3. Reklam kaldırma teklifi kontrolü
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _checkAndShowRemoveAdsPromotion();
+    } catch (e) {
+      print('Başlangıç kontrolleri hatası: $e');
+      // Hata olsa bile uygulama çalışmaya devam etsin
+    }
   }
 
   // Günlük ödül kontrolü ve gösterimi
@@ -959,61 +964,82 @@ class _MainMenuPageState extends State<MainMenuPage>
 
   // Rating isteği kontrolü ve gösterimi
   Future<void> _checkAndShowRatingPrompt() async {
-    final shouldShow = await AppRatingSystem.shouldShowRatingPrompt();
-    if (shouldShow && mounted) {
-      _showRatingDialog();
+    try {
+      final shouldShow = await AppRatingSystem.shouldShowRatingPrompt();
+      if (shouldShow && mounted) {
+        _showRatingDialog();
+      }
+    } catch (e) {
+      print('Rating prompt kontrol hatası: $e');
     }
   }
 
   // Reklam kaldırma teklifi kontrolü ve gösterimi
   Future<void> _checkAndShowRemoveAdsPromotion() async {
-    // Önce abonelik kontrolü - zaten varsa gösterme
-    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-    if (hasSubscription) return;
+    try {
+      // Önce abonelik kontrolü - zaten varsa gösterme
+      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+      if (hasSubscription) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final lastShownTime = prefs.getInt('remove_ads_promo_last_shown') ?? 0;
-    final showCount = prefs.getInt('remove_ads_promo_count') ?? 0;
-    final currentTime = DateTime.now().millisecondsSinceEpoch;
-    
-    // 3 günde bir göster, maksimum 10 kez
-    const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
-    if (showCount < 10 && (currentTime - lastShownTime) > threeDaysInMs && mounted) {
-      await prefs.setInt('remove_ads_promo_last_shown', currentTime);
-      await prefs.setInt('remove_ads_promo_count', showCount + 1);
-      _showRemoveAdsPromotionDialog();
+      final prefs = await SharedPreferences.getInstance();
+      final lastShownTime = prefs.getInt('remove_ads_promo_last_shown') ?? 0;
+      final showCount = prefs.getInt('remove_ads_promo_count') ?? 0;
+      final currentTime = DateTime.now().millisecondsSinceEpoch;
+      
+      // 3 günde bir göster, maksimum 10 kez
+      const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
+      if (showCount < 10 && (currentTime - lastShownTime) > threeDaysInMs && mounted) {
+        await prefs.setInt('remove_ads_promo_last_shown', currentTime);
+        await prefs.setInt('remove_ads_promo_count', showCount + 1);
+        _showRemoveAdsPromotionDialog();
+      }
+    } catch (e) {
+      print('Reklam kaldırma teklifi kontrol hatası: $e');
     }
   }
 
   void _loadBannerAd() async {
-    // Reklamsız abonelik varsa reklam yükleme
-    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-    if (hasSubscription) {
-      setState(() {
-        _isBannerAdReady = false;
-      });
-      return;
-    }
-
-    _bannerAd = BannerAd(
-      adUnitId: AdMobHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
+    try {
+      // Reklamsız abonelik varsa reklam yükleme
+      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+      if (hasSubscription) {
+        if (mounted) {
           setState(() {
-            _isBannerAdReady = true;
+            _isBannerAdReady = false;
           });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Banner reklam yüklenemedi: $err');
-          _isBannerAdReady = false;
-          ad.dispose();
-        },
-      ),
-    );
+        }
+        return;
+      }
 
-    _bannerAd!.load();
+      _bannerAd = BannerAd(
+        adUnitId: AdMobHelper.bannerAdUnitId,
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            if (mounted) {
+              setState(() {
+                _isBannerAdReady = true;
+              });
+            }
+          },
+          onAdFailedToLoad: (ad, err) {
+            print('Banner reklam yüklenemedi: $err');
+            _isBannerAdReady = false;
+            ad.dispose();
+          },
+        ),
+      );
+
+      _bannerAd!.load();
+    } catch (e) {
+      print('Banner reklam yükleme hatası: $e');
+      if (mounted) {
+        setState(() {
+          _isBannerAdReady = false;
+        });
+      }
+    }
   }
 
   @override
@@ -1667,7 +1693,7 @@ class _MainMenuPageState extends State<MainMenuPage>
               Navigator.pop(ctx);
               // App Store'a yönlendir
               final url = Platform.isIOS
-                  ? 'https://apps.apple.com/app/id<APP_ID>' // TODO: Gerçek App ID eklenecek
+                  ? 'https://apps.apple.com/app/kelime-avcisi/id6738733068'
                   : 'https://play.google.com/store/apps/details?id=com.beldiadigital.kelimeavcisi';
               
               if (await canLaunchUrl(Uri.parse(url))) {
@@ -3125,35 +3151,46 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   }
 
   void _loadBannerAd() async {
-    // Reklamsız abonelik varsa reklam yükleme
-    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-    if (hasSubscription) {
-      setState(() {
-        _isBannerAdReady = false;
-      });
-      return;
-    }
+    try {
+      // Reklamsız abonelik varsa reklam yükleme
+      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+      if (hasSubscription) {
+        if (mounted) {
+          setState(() {
+            _isBannerAdReady = false;
+          });
+        }
+        return;
+      }
 
-    _bannerAd = BannerAd(
-      adUnitId: AdMobHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          if (mounted) {
-            setState(() {
-              _isBannerAdReady = true;
-            });
-          }
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Oyun banner reklam yüklenemedi: $err');
+      _bannerAd = BannerAd(
+        adUnitId: AdMobHelper.bannerAdUnitId,
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            if (mounted) {
+              setState(() {
+                _isBannerAdReady = true;
+              });
+            }
+          },
+          onAdFailedToLoad: (ad, err) {
+            print('Oyun banner reklam yüklenemedi: $err');
+            _isBannerAdReady = false;
+            ad.dispose();
+          },
+        ),
+      );
+      _bannerAd!.load();
+    } catch (e) {
+      print('Banner reklam yükleme hatası: $e');
+      if (mounted) {
+        setState(() {
           _isBannerAdReady = false;
-          ad.dispose();
-        },
-      ),
-    );
-    _bannerAd!.load();
+        });
+      }
+    }
   }
 
   @override
