@@ -12,6 +12,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
 import 'package:confetti/confetti.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'models/achievement.dart';
 import 'models/currency.dart';
 import 'models/stars.dart';
@@ -942,6 +943,10 @@ class _MainMenuPageState extends State<MainMenuPage>
     // 2. Rating isteği kontrolü (günlük ödülden sonra)
     await Future.delayed(const Duration(milliseconds: 500));
     await _checkAndShowRatingPrompt();
+
+    // 3. Reklam kaldırma teklifi kontrolü
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _checkAndShowRemoveAdsPromotion();
   }
 
   // Günlük ödül kontrolü ve gösterimi
@@ -957,6 +962,26 @@ class _MainMenuPageState extends State<MainMenuPage>
     final shouldShow = await AppRatingSystem.shouldShowRatingPrompt();
     if (shouldShow && mounted) {
       _showRatingDialog();
+    }
+  }
+
+  // Reklam kaldırma teklifi kontrolü ve gösterimi
+  Future<void> _checkAndShowRemoveAdsPromotion() async {
+    // Önce abonelik kontrolü - zaten varsa gösterme
+    final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
+    if (hasSubscription) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final lastShownTime = prefs.getInt('remove_ads_promo_last_shown') ?? 0;
+    final showCount = prefs.getInt('remove_ads_promo_count') ?? 0;
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    
+    // 3 günde bir göster, maksimum 10 kez
+    const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
+    if (showCount < 10 && (currentTime - lastShownTime) > threeDaysInMs && mounted) {
+      await prefs.setInt('remove_ads_promo_last_shown', currentTime);
+      await prefs.setInt('remove_ads_promo_count', showCount + 1);
+      _showRemoveAdsPromotionDialog();
     }
   }
 
@@ -1604,6 +1629,69 @@ class _MainMenuPageState extends State<MainMenuPage>
       context: context,
       barrierDismissible: false,
       builder: (ctx) => DailyRewardDialog(onClaimed: () => setState(() {})),
+    );
+  }
+
+  void _showRemoveAdsPromotionDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Column(
+          children: [
+            Text('🎯', style: TextStyle(fontSize: 50)),
+            SizedBox(height: 10),
+            Text(
+              'Sınırsız Oyun Deneyimi!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Reklamları kaldırarak kesintisiz, sınırsız oyun deneyimi yaşamak ister misiniz?\n\n✨ Reklamsız oyun\n⚡ Daha hızlı yükleme\n💎 Özel bonuslar',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 15),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text(
+              'Daha Sonra',
+              style: TextStyle(color: Colors.grey, fontSize: 14),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              // App Store'a yönlendir
+              final url = Platform.isIOS
+                  ? 'https://apps.apple.com/app/id<APP_ID>' // TODO: Gerçek App ID eklenecek
+                  : 'https://play.google.com/store/apps/details?id=com.beldiadigital.kelimeavcisi';
+              
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: const Text(
+              '🚀 Hemen İncele',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
