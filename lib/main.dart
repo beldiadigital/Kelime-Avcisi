@@ -12,7 +12,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
 import 'package:confetti/confetti.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'models/achievement.dart';
 import 'models/currency.dart';
 import 'models/stars.dart';
@@ -27,6 +26,104 @@ import 'models/app_rating.dart';
 import 'services/sound_manager.dart';
 import 'services/iap_service.dart';
 import 'utils/responsive_helper.dart';
+
+// ==========================================
+// SABITLER (CONSTANTS)
+// ==========================================
+
+// Oyun sabitleri
+class GameConstants {
+  // Skor ve puan
+  static const int baseScore = 100;
+  static const int comboBonus = 50;
+  static const int perfectLevelBonus = 200;
+  static const int goldMultiplier = 2;
+  
+  // Para kazanma
+  static const int baseCoins = 50;
+  static const int comboCoinsBonus = 10;
+  static const int levelCompletionCoins = 100;
+  static const int gemsPerStar = 2;
+  
+  // XP kazanma
+  static const int baseXP = 50;
+  static const int perfectLevelXP = 100;
+  static const int starXPBonus = 25;
+  
+  // Yıldız kriterleri
+  static const int oneStar = 0; // 0 hata
+  static const int twoStars = 1; // Max 1 hata
+  static const int threeStars = 3; // Max 3 hata
+  
+  // Özel balon süreleri (saniye)
+  static const int goldBalloonDuration = 10;
+  static const int slowBalloonDuration = 10;
+  static const int speedBalloonDuration = 10;
+  
+  // Can sistemi
+  static const int maxLives = 5;
+  static const int liveRegenMinutes = 20;
+  
+  // Zamanlayıcı
+  static const int timerTickSeconds = 1;
+}
+
+// UI sabitleri
+class UIConstants {
+  // Padding ve spacing
+  static const double defaultPadding = 15.0;
+  static const double smallPadding = 8.0;
+  static const double largePadding = 20.0;
+  static const double gridSpacing = 12.0;
+  
+  // Border radius
+  static const double defaultRadius = 15.0;
+  static const double largeRadius = 25.0;
+  static const double smallRadius = 10.0;
+  
+  // Icon boyutları
+  static const double smallIcon = 20.0;
+  static const double mediumIcon = 24.0;
+  static const double largeIcon = 40.0;
+  static const double extraLargeIcon = 80.0;
+  
+  // Font boyutları
+  static const double smallFont = 12.0;
+  static const double mediumFont = 16.0;
+  static const double largeFont = 24.0;
+  static const double titleFont = 32.0;
+  
+  // Grid layout
+  static const double levelCardAspectRatio = 0.8;
+  static const int levelGridCrossAxisCount = 5;
+  
+  // Animasyon süreleri (milliseconds)
+  static const int shortAnimation = 300;
+  static const int mediumAnimation = 500;
+  static const int longAnimation = 1500;
+  static const int confettiDuration = 3000;
+}
+
+// Promosyon ve timing sabitleri
+class PromoConstants {
+  // Reklam kaldırma promosyonu
+  static const int removeAdsPromoDays = 3;
+  static const int removeAdsPromoMaxShows = 10;
+  static const int removeAdsPromoDelayMs = 500;
+  
+  // Rating promosyonu
+  static const int ratingPromoDelayMs = 500;
+  
+  // Günlük ödül
+  static const int dailyRewardDelayMs = 500;
+}
+
+// SnackBar süreleri
+class SnackBarDurations {
+  static const Duration short = Duration(seconds: 1);
+  static const Duration medium = Duration(seconds: 2);
+  static const Duration long = Duration(seconds: 3);
+}
 
 // ==========================================
 // 1. VERİ YAPILARI VE KATEGORİLER
@@ -916,12 +1013,12 @@ class _MainMenuPageState extends State<MainMenuPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: UIConstants.longAnimation),
       vsync: this,
     )..repeat(reverse: true);
 
     _confettiController = ConfettiController(
-      duration: const Duration(seconds: 3),
+      duration: Duration(milliseconds: UIConstants.confettiDuration),
     );
     _loadBannerAd();
 
@@ -936,17 +1033,17 @@ class _MainMenuPageState extends State<MainMenuPage>
       await AppRatingSystem.incrementLaunchCount();
 
       // Kısa bir gecikme sonrası kontrolleri yap
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: PromoConstants.dailyRewardDelayMs));
 
       // 1. Günlük ödül kontrolü
       await _checkAndShowDailyReward();
 
       // 2. Rating isteği kontrolü (günlük ödülden sonra)
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: PromoConstants.ratingPromoDelayMs));
       await _checkAndShowRatingPrompt();
 
       // 3. Reklam kaldırma teklifi kontrolü
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: PromoConstants.removeAdsPromoDelayMs));
       await _checkAndShowRemoveAdsPromotion();
     } catch (e) {
       print('Başlangıç kontrolleri hatası: $e');
@@ -986,9 +1083,11 @@ class _MainMenuPageState extends State<MainMenuPage>
       final showCount = prefs.getInt('remove_ads_promo_count') ?? 0;
       final currentTime = DateTime.now().millisecondsSinceEpoch;
       
-      // 3 günde bir göster, maksimum 10 kez
-      const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
-      if (showCount < 10 && (currentTime - lastShownTime) > threeDaysInMs && mounted) {
+      // Promosyon gösterme koşulları
+      const threeDaysInMs = PromoConstants.removeAdsPromoDays * 24 * 60 * 60 * 1000;
+      if (showCount < PromoConstants.removeAdsPromoMaxShows && 
+          (currentTime - lastShownTime) > threeDaysInMs && 
+          mounted) {
         await prefs.setInt('remove_ads_promo_last_shown', currentTime);
         await prefs.setInt('remove_ads_promo_count', showCount + 1);
         _showRemoveAdsPromotionDialog();
@@ -1691,17 +1790,13 @@ class _MainMenuPageState extends State<MainMenuPage>
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              // App Store'a yönlendir
-              final url = Platform.isIOS
-                  ? 'https://apps.apple.com/app/kelime-avcisi/id6738733068'
-                  : 'https://play.google.com/store/apps/details?id=com.beldiadigital.kelimeavcisi';
-              
-              if (await canLaunchUrl(Uri.parse(url))) {
-                await launchUrl(
-                  Uri.parse(url),
-                  mode: LaunchMode.externalApplication,
-                );
-              }
+              // Elmas mağazasını aç (abonelik seçeneği de burada)
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const GemStorePage(),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
@@ -2547,7 +2642,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     super.initState();
     _comboController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: UIConstants.mediumAnimation),
     );
     _loadBannerAd();
 
@@ -2573,12 +2668,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
     switch (specialType) {
       case 'gold':
-        // 2x puan aktif et (10 saniye)
+        // 2x puan aktif et
         setState(() {
           _isGoldActive = true;
         });
         _goldTimer?.cancel();
-        _goldTimer = async.Timer(const Duration(seconds: 10), () {
+        _goldTimer = async.Timer(Duration(seconds: GameConstants.goldBalloonDuration), () {
           if (mounted) {
             setState(() {
               _isGoldActive = false;
@@ -2586,9 +2681,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           }
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("🌟 2x Puan Aktif! (10 saniye)"),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: Text("🌟 2x Puan Aktif! (${GameConstants.goldBalloonDuration} saniye)"),
+            duration: SnackBarDurations.short,
             backgroundColor: Colors.amber,
           ),
         );
@@ -2604,9 +2699,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           }
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("🃏 Joker! Bir harf otomatik tamamlandı!"),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: const Text("🃏 Joker! Bir harf otomatik tamamlandı!"),
+            duration: SnackBarDurations.short,
             backgroundColor: Colors.purple,
           ),
         );
@@ -2768,22 +2863,22 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     setState(() {
       // Combo hesapla
       _combo++;
-      int baseScore = 100;
-      int comboBonus = _combo > 1 ? (_combo - 1) * 50 : 0;
+      int baseScore = GameConstants.baseScore;
+      int comboBonus = _combo > 1 ? (_combo - 1) * GameConstants.comboBonus : 0;
       int totalPoints = baseScore + comboBonus;
 
       // Gold balon aktif ise 2x puan
       if (_isGoldActive) {
-        totalPoints *= 2;
+        totalPoints *= GameConstants.goldMultiplier;
       }
 
       _score += totalPoints;
       _wordsCompleted++;
 
       // Para kazan (gold aktif ise 2x)
-      int coinsToAdd = 50 + (_combo * 10);
+      int coinsToAdd = GameConstants.baseCoins + (_combo * GameConstants.comboCoinsBonus);
       if (_isGoldActive) {
-        coinsToAdd *= 2;
+        coinsToAdd *= GameConstants.goldMultiplier;
       }
       CurrencyManager.addCoins(coinsToAdd);
 
@@ -2873,11 +2968,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
     // Elmas kazan (yıldız sayısına göre)
     if (stars > 0) {
-      CurrencyManager.addGems(stars * 2);
+      CurrencyManager.addGems(stars * GameConstants.gemsPerStar);
     }
 
     // Mükemmel seviye başarımı
-    if (_mistakes == 0) {
+    if (_mistakes == GameConstants.oneStar) {
       AchievementManager.checkAndUnlock('perfect_level');
     }
 
