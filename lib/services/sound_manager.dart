@@ -8,7 +8,7 @@ class SoundManager {
 
   final AudioPlayer _effectPlayer = AudioPlayer();
   final AudioPlayer _musicPlayer = AudioPlayer();
-  
+
   bool _soundEnabled = true;
   bool _musicEnabled = true;
 
@@ -31,7 +31,7 @@ class SoundManager {
     _musicEnabled = !_musicEnabled;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('music_enabled', _musicEnabled);
-    
+
     if (!_musicEnabled) {
       await _musicPlayer.stop();
     }

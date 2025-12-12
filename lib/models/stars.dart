@@ -14,7 +14,7 @@ class LevelStars {
   static Future<void> setStars(String difficulty, int level, int stars) async {
     final key = '${difficulty}_$level';
     final currentStars = _stars[key] ?? 0;
-    
+
     // Sadece daha yüksek yıldız sayısı varsa güncelle
     if (stars > currentStars) {
       _stars[key] = stars;
@@ -37,7 +37,9 @@ class LevelStars {
   }
 
   static int getAllStars() {
-    return getTotalStars('kolay') + getTotalStars('orta') + getTotalStars('zor');
+    return getTotalStars('kolay') +
+        getTotalStars('orta') +
+        getTotalStars('zor');
   }
 
   // Seviye performansına göre yıldız hesapla
@@ -60,7 +62,9 @@ class LevelStars {
 
     // 3. yıldız: Hedefin %200'üne ulaş VE süre limitinin %50'sinden az zamanda bitir
     if (timeLimit > 0) {
-      if (score >= (targetScore * 2).toInt() && timeSpent <= (timeLimit * 0.5).toInt() && mistakes == 0) {
+      if (score >= (targetScore * 2).toInt() &&
+          timeSpent <= (timeLimit * 0.5).toInt() &&
+          mistakes == 0) {
         stars = 3;
       }
     } else {

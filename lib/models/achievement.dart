@@ -113,20 +113,21 @@ class AchievementManager {
     final prefs = await SharedPreferences.getInstance();
     for (var achievement in achievements) {
       achievement.isUnlocked = prefs.getBool('ach_${achievement.id}') ?? false;
-      achievement.progress = prefs.getInt('ach_progress_${achievement.id}') ?? 0;
+      achievement.progress =
+          prefs.getInt('ach_progress_${achievement.id}') ?? 0;
     }
   }
 
   static Future<void> updateProgress(String id, int progress) async {
     final achievement = achievements.firstWhere((a) => a.id == id);
     achievement.progress = progress;
-    
+
     if (progress >= achievement.target && !achievement.isUnlocked) {
       achievement.isUnlocked = true;
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('ach_${achievement.id}', true);
     }
-    
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('ach_progress_${achievement.id}', progress);
   }
@@ -140,5 +141,6 @@ class AchievementManager {
     }
   }
 
-  static int get unlockedCount => achievements.where((a) => a.isUnlocked).length;
+  static int get unlockedCount =>
+      achievements.where((a) => a.isUnlocked).length;
 }

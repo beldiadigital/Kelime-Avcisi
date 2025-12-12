@@ -71,7 +71,7 @@ class DailyReward {
     if (!canClaim) return {};
 
     final now = DateTime.now();
-    
+
     // Streak kontrolü
     if (_lastClaimDate != null) {
       final hoursDiff = now.difference(_lastClaimDate!).inHours;

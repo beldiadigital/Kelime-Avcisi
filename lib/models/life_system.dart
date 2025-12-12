@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LifeSystem {
   static const int maxLives = 5;
   static const int rechargeMinutes = 30;
-  
+
   static int _currentLives = maxLives;
   static DateTime? _lastLifeLostTime;
 
@@ -38,7 +38,7 @@ class LifeSystem {
 
   static Future<bool> useLife() async {
     if (_currentLives <= 0) return false;
-    
+
     _currentLives--;
     if (_lastLifeLostTime == null) {
       _lastLifeLostTime = DateTime.now();
@@ -62,7 +62,10 @@ class LifeSystem {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lives', _currentLives);
     if (_lastLifeLostTime != null) {
-      await prefs.setString('last_life_lost', _lastLifeLostTime!.toIso8601String());
+      await prefs.setString(
+        'last_life_lost',
+        _lastLifeLostTime!.toIso8601String(),
+      );
     }
   }
 

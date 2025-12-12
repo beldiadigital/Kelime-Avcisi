@@ -110,16 +110,17 @@ class ThemeManager {
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _currentThemeId = prefs.getString('current_theme') ?? 'default';
-    
+
     // Load unlocked themes
     for (var theme in themes) {
-      theme.isUnlocked = prefs.getBool('theme_${theme.id}') ?? (theme.id == 'default');
+      theme.isUnlocked =
+          prefs.getBool('theme_${theme.id}') ?? (theme.id == 'default');
     }
   }
 
   static Future<bool> unlockTheme(String themeId, int coins) async {
     final theme = themes.firstWhere((t) => t.id == themeId);
-    
+
     if (theme.isUnlocked) return false;
     if (coins < theme.unlockCost) return false;
 

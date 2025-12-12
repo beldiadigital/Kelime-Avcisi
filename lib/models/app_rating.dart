@@ -10,7 +10,7 @@ class AppRatingSystem {
   // Kaç oyun seansından sonra değerlendirme isteneceği
   static const int launchesUntilPrompt = 5; // İlk istem
   static const int launchesAfterDecline = 10; // Reddettikten sonra
-  
+
   // Günlük ödül sonrası değerlendirme
   static const int daysForRating = 3; // 3 gün günlük ödül aldıktan sonra
 
@@ -24,7 +24,7 @@ class AppRatingSystem {
   // Değerlendirme isteği gösterilmeli mi?
   static Future<bool> shouldShowRatingPrompt() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Kullanıcı zaten değerlendirdi mi?
     if (prefs.getBool(_keyUserRated) ?? false) {
       return false;
@@ -84,7 +84,7 @@ class AppRatingSystem {
     // iOS App Store URL - App yayınlandığında ID güncellenecek
     // Şu an için generic App Store sayfası
     final url = Uri.parse('https://apps.apple.com/app/id6738322775');
-    
+
     try {
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);

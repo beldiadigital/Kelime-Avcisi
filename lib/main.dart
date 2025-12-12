@@ -25,6 +25,7 @@ import 'models/time_record.dart';
 import 'models/app_rating.dart';
 import 'services/sound_manager.dart';
 import 'services/iap_service.dart';
+import 'utils/responsive_helper.dart';
 
 // ==========================================
 // 1. VERİ YAPILARI VE KATEGORİLER
@@ -272,6 +273,82 @@ class LevelData {
             timeLimit: 40,
             hasMovingSlots: true,
           ),
+          LevelData(
+            level: 11,
+            difficulty: difficulty,
+            word: "KUŞLAR",
+            targetScore: 300,
+            timeLimit: 40,
+          ),
+          LevelData(
+            level: 12,
+            difficulty: difficulty,
+            word: "ARABA",
+            targetScore: 350,
+            timeLimit: 38,
+          ),
+          LevelData(
+            level: 13,
+            difficulty: difficulty,
+            word: "BALON",
+            targetScore: 350,
+            timeLimit: 38,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 14,
+            difficulty: difficulty,
+            word: "ÇANTA",
+            targetScore: 400,
+            timeLimit: 35,
+          ),
+          LevelData(
+            level: 15,
+            difficulty: difficulty,
+            word: "KÖPEK",
+            targetScore: 400,
+            timeLimit: 35,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 16,
+            difficulty: difficulty,
+            word: "MASA",
+            targetScore: 450,
+            timeLimit: 32,
+          ),
+          LevelData(
+            level: 17,
+            difficulty: difficulty,
+            word: "SANDIK",
+            targetScore: 450,
+            timeLimit: 32,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 18,
+            difficulty: difficulty,
+            word: "ORMAN",
+            targetScore: 500,
+            timeLimit: 30,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 19,
+            difficulty: difficulty,
+            word: "DENIZ",
+            targetScore: 500,
+            timeLimit: 30,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 20,
+            difficulty: difficulty,
+            word: "GÖKYÜZÜ",
+            targetScore: 550,
+            timeLimit: 28,
+            hasMovingSlots: true,
+          ),
         ];
 
       case GameDifficulty.orta:
@@ -349,6 +426,86 @@ class LevelData {
             word: "ÇIKOLATA",
             targetScore: 500,
             timeLimit: 25,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 11,
+            difficulty: difficulty,
+            word: "ASLAN",
+            targetScore: 550,
+            timeLimit: 22,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 12,
+            difficulty: difficulty,
+            word: "BALIK",
+            targetScore: 600,
+            timeLimit: 20,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 13,
+            difficulty: difficulty,
+            word: "KUŞLAR",
+            targetScore: 650,
+            timeLimit: 20,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 14,
+            difficulty: difficulty,
+            word: "YATAK",
+            targetScore: 700,
+            timeLimit: 18,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 15,
+            difficulty: difficulty,
+            word: "SANDALYE",
+            targetScore: 750,
+            timeLimit: 18,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 16,
+            difficulty: difficulty,
+            word: "ÇERÇEVE",
+            targetScore: 800,
+            timeLimit: 16,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 17,
+            difficulty: difficulty,
+            word: "MASA",
+            targetScore: 850,
+            timeLimit: 16,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 18,
+            difficulty: difficulty,
+            word: "PENCERE",
+            targetScore: 900,
+            timeLimit: 15,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 19,
+            difficulty: difficulty,
+            word: "TAŞLAR",
+            targetScore: 950,
+            timeLimit: 15,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 20,
+            difficulty: difficulty,
+            word: "KÜTÜPHANE",
+            targetScore: 1000,
+            timeLimit: 14,
             hasMovingSlots: true,
           ),
         ];
@@ -433,6 +590,86 @@ class LevelData {
             word: "BAHARATLIK",
             targetScore: 800,
             timeLimit: 18,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 11,
+            difficulty: difficulty,
+            word: "MÜHENDİS",
+            targetScore: 850,
+            timeLimit: 17,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 12,
+            difficulty: difficulty,
+            word: "DOKTORLAR",
+            targetScore: 900,
+            timeLimit: 16,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 13,
+            difficulty: difficulty,
+            word: "ÖĞRETMEN",
+            targetScore: 950,
+            timeLimit: 15,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 14,
+            difficulty: difficulty,
+            word: "HEMŞIRE",
+            targetScore: 1000,
+            timeLimit: 14,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 15,
+            difficulty: difficulty,
+            word: "ASTRONOT",
+            targetScore: 1050,
+            timeLimit: 13,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 16,
+            difficulty: difficulty,
+            word: "ÇAMAŞIR",
+            targetScore: 1100,
+            timeLimit: 12,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 17,
+            difficulty: difficulty,
+            word: "BUZDOLABI",
+            targetScore: 1150,
+            timeLimit: 12,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 18,
+            difficulty: difficulty,
+            word: "KARANLIK",
+            targetScore: 1200,
+            timeLimit: 11,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 19,
+            difficulty: difficulty,
+            word: "PAZARTESI",
+            targetScore: 1250,
+            timeLimit: 11,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 20,
+            difficulty: difficulty,
+            word: "KÜTÜPHANE",
+            targetScore: 1300,
+            timeLimit: 10,
             hasMovingSlots: true,
           ),
         ];
@@ -547,6 +784,18 @@ class DragDropApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.deepPurple,
       ),
+      builder: (context, child) {
+        // Responsive text scaling with max limit
+        final currentScale = MediaQuery.of(context).textScaler.scale(1.0);
+        final clampedScale = currentScale.clamp(0.8, 1.3);
+
+        return MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(clampedScale)),
+          child: child!,
+        );
+      },
       home: const MainMenuPage(),
     );
   }
@@ -917,17 +1166,19 @@ class _MainMenuPageState extends State<MainMenuPage>
                         ),
                       ),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: context.responsive.spacing(base: 30)),
 
-                      // Başlık - Modern Typography
+                      // Başlık - Modern Typography (Responsive)
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: context.responsive.padding(
                           horizontal: 30,
                           vertical: 15,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(
+                            context.responsive.borderRadius(base: 30),
+                          ),
                           border: Border.all(
                             color: Colors.white.withOpacity(0.2),
                             width: 1.5,
@@ -940,10 +1191,14 @@ class _MainMenuPageState extends State<MainMenuPage>
                             ),
                           ],
                         ),
-                        child: const Text(
+                        child: Text(
                           "KELİME AVCISI",
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: context.responsive.fontSize(
+                              small: 28,
+                              medium: 36,
+                              large: 44,
+                            ),
                             fontWeight: FontWeight.w900,
                             color: Colors.white,
                             letterSpacing: 2,
@@ -951,7 +1206,7 @@ class _MainMenuPageState extends State<MainMenuPage>
                         ),
                       ),
 
-                      const SizedBox(height: 15),
+                      SizedBox(height: context.responsive.spacing(base: 15)),
 
                       // Alt başlık
                       Text(
@@ -1309,6 +1564,7 @@ class _MainMenuPageState extends State<MainMenuPage>
                 const SnackBar(
                   content: Text('Teşekkürler! 🌟'),
                   backgroundColor: Colors.green,
+                  duration: Duration(seconds: 1),
                 ),
               );
             },
@@ -1368,7 +1624,10 @@ class _MainMenuPageState extends State<MainMenuPage>
                   Navigator.pop(ctx);
                   setState(() {});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ 1000 elmas eklendi!')),
+                    const SnackBar(
+                      content: Text('✅ 1000 elmas eklendi!'),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
                 },
                 icon: const Text('💎'),
@@ -1388,7 +1647,10 @@ class _MainMenuPageState extends State<MainMenuPage>
                   Navigator.pop(ctx);
                   setState(() {});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ 10000 altın eklendi!')),
+                    const SnackBar(
+                      content: Text('✅ 10000 altın eklendi!'),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
                 },
                 icon: const Text('🪙'),
@@ -1408,7 +1670,10 @@ class _MainMenuPageState extends State<MainMenuPage>
                   Navigator.pop(ctx);
                   setState(() {});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ Canlar dolduruldu!')),
+                    const SnackBar(
+                      content: Text('✅ Canlar dolduruldu!'),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
                 },
                 icon: const Text('❤️'),
@@ -1436,7 +1701,10 @@ class _MainMenuPageState extends State<MainMenuPage>
                   Navigator.pop(ctx);
                   setState(() {});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ Tüm temalar açıldı!')),
+                    const SnackBar(
+                      content: Text('✅ Tüm temalar açıldı!'),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
                 },
                 icon: const Text('🎨'),
@@ -1456,7 +1724,10 @@ class _MainMenuPageState extends State<MainMenuPage>
                   Navigator.pop(ctx);
                   setState(() {});
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ 500 XP eklendi!')),
+                    const SnackBar(
+                      content: Text('✅ 500 XP eklendi!'),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
                 },
                 icon: const Text('⭐'),
@@ -1839,31 +2110,55 @@ class LevelSelectPage extends StatelessWidget {
                 ),
               ),
 
-              // Seviye Grid'i
+              // Seviye Grid'i (Responsive)
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(20),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.85,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
-                  ),
-                  itemCount: levels.length,
-                  itemBuilder: (context, index) {
-                    final level = levels[index];
-                    final isUnlocked = LevelProgress.isLevelUnlocked(
-                      difficulty,
-                      level.level,
-                    );
-                    final isCompleted = level.level <= completedCount;
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // iPad: 5 sütun, Büyük telefon: 4 sütun, Normal: 3 sütun, Küçük: 3 sütun
+                    int crossAxisCount;
+                    double childAspectRatio;
 
-                    return _buildLevelCard(
-                      context,
-                      level: level,
-                      isUnlocked: isUnlocked,
-                      isCompleted: isCompleted,
-                      primaryColor: primaryColor,
+                    if (context.responsive.isTablet) {
+                      crossAxisCount = 5;
+                      childAspectRatio = 0.9;
+                    } else if (context.responsive.isLargePhone) {
+                      crossAxisCount = 4;
+                      childAspectRatio = 0.85;
+                    } else {
+                      crossAxisCount = 3;
+                      childAspectRatio = 0.8;
+                    }
+
+                    return GridView.builder(
+                      padding: EdgeInsets.fromLTRB(
+                        context.responsive.spacing(base: 15),
+                        context.responsive.spacing(base: 10),
+                        context.responsive.spacing(base: 15),
+                        context.responsive.spacing(base: 15),
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: childAspectRatio,
+                        crossAxisSpacing: context.responsive.spacing(base: 12),
+                        mainAxisSpacing: context.responsive.spacing(base: 12),
+                      ),
+                      itemCount: levels.length,
+                      itemBuilder: (context, index) {
+                        final level = levels[index];
+                        final isUnlocked = LevelProgress.isLevelUnlocked(
+                          difficulty,
+                          level.level,
+                        );
+                        final isCompleted = level.level <= completedCount;
+
+                        return _buildLevelCard(
+                          context,
+                          level: level,
+                          isUnlocked: isUnlocked,
+                          isCompleted: isCompleted,
+                          primaryColor: primaryColor,
+                        );
+                      },
                     );
                   },
                 ),
@@ -1950,41 +2245,45 @@ class LevelSelectPage extends StatelessWidget {
 
             // Seviye bilgisi
             if (isUnlocked)
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 12),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 8),
 
-                    // Seviye numarası
-                    Text(
-                      "${level.level}",
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w900,
-                        color: primaryColor,
+                      // Seviye numarası
+                      Text(
+                        "${level.level}",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          color: primaryColor,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 6),
 
-                    // Özellikler
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (level.timeLimit > 0)
-                          const Icon(
-                            Icons.timer,
-                            size: 14,
-                            color: Colors.orange,
-                          ),
-                        if (level.hasMovingSlots) const SizedBox(width: 5),
-                        if (level.hasMovingSlots)
-                          const Icon(Icons.waves, size: 14, color: Colors.blue),
-                      ],
-                    ),
-                  ],
+                      // Özellikler
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (level.timeLimit > 0)
+                            const Icon(
+                              Icons.timer,
+                              size: 13,
+                              color: Colors.orange,
+                            ),
+                          if (level.hasMovingSlots) const SizedBox(width: 4),
+                          if (level.hasMovingSlots)
+                            const Icon(Icons.waves, size: 13, color: Colors.blue),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
@@ -2085,7 +2384,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("🌟 2x Puan Aktif! (10 saniye)"),
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 1),
             backgroundColor: Colors.amber,
           ),
         );
@@ -2103,7 +2402,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("🃏 Joker! Bir harf otomatik tamamlandı!"),
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 1),
             backgroundColor: Colors.purple,
           ),
         );
@@ -2687,123 +2986,162 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           // OYUN MOTORU
           GameWidget(game: _game),
 
-          // ÜST PANEL - Skor, Pause ve Power-ups
+          // ÜST PANEL - Skor, Pause ve Power-ups (Responsive)
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: context.responsive.padding(all: 15),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Pause butonu
-                      IconButton.filled(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white24,
-                        ),
-                        icon: const Icon(Icons.pause, color: Colors.white),
-                        onPressed: _showPauseMenu,
-                      ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      // iPad için daha geniş layout, küçük telefonlar için kompakt
+                      final isCompact = constraints.maxWidth < 375;
 
-                      // Zamanlayıcı
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.timer,
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Pause butonu
+                          IconButton.filled(
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.white24,
+                              padding: context.responsive.padding(all: 12),
+                            ),
+                            icon: Icon(
+                              Icons.pause,
                               color: Colors.white,
-                              size: 20,
+                              size: context.responsive.iconSize(base: 24),
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              TimeRecord.formatTime(_timeSpent),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Skor göstergesi
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
+                            onPressed: _showPauseMenu,
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "$_score",
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
 
-                      // Kelime Sayacı
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(
-                              Icons.check_circle,
-                              color: Colors.greenAccent,
-                              size: 20,
+                          // Zamanlayıcı
+                          Container(
+                            padding: context.responsive.padding(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                            Text(
-                              "$_wordsCompleted",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(
+                                context.responsive.borderRadius(base: 20),
+                              ),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.timer,
+                                  color: Colors.white,
+                                  size: context.responsive.iconSize(base: 20),
+                                ),
+                                SizedBox(
+                                  width: context.responsive.spacing(base: 6),
+                                ),
+                                Text(
+                                  TimeRecord.formatTime(_timeSpent),
+                                  style: TextStyle(
+                                    fontSize: context.responsive.fontSize(
+                                      small: 14,
+                                      medium: 18,
+                                      large: 20,
+                                    ),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          if (!isCompact) ...[
+                            // Skor göstergesi (sadece büyük ekranlarda)
+                            Container(
+                              padding: context.responsive.padding(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(
+                                  context.responsive.borderRadius(base: 25),
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: context.responsive.iconSize(base: 24),
+                                  ),
+                                  SizedBox(
+                                    width: context.responsive.spacing(base: 8),
+                                  ),
+                                  Text(
+                                    "$_score",
+                                    style: TextStyle(
+                                      fontSize: context.responsive.fontSize(
+                                        small: 16,
+                                        medium: 20,
+                                        large: 22,
+                                      ),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                    ],
+
+                          // Kelime Sayacı
+                          Container(
+                            padding: context.responsive.padding(all: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(
+                                context.responsive.borderRadius(base: 15),
+                              ),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.greenAccent,
+                                  size: context.responsive.iconSize(base: 20),
+                                ),
+                                Text(
+                                  "$_wordsCompleted",
+                                  style: TextStyle(
+                                    fontSize: context.responsive.fontSize(
+                                      small: 14,
+                                      medium: 16,
+                                      large: 18,
+                                    ),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
-                  const SizedBox(height: 15),
+                  SizedBox(height: context.responsive.spacing(base: 15)),
 
                   // POWER-UP PANEL (Üstte)
                   Container(
@@ -3014,14 +3352,27 @@ class BubbleGame extends FlameGame with HasCollisionDetection {
     }
     targetIndex = 0;
 
-    // Zorluk bazlı slot ayarları
-    double slotSpacing = difficulty == GameDifficulty.kolay ? 70 : 60;
+    // Ekran genişliğine ve kelime uzunluğuna göre dinamik slot ayarları
+    double maxWidth = size.x - 40; // Ekran genişliği - kenar boşlukları
+    double slotSpacing;
+    
+    if (currentWord.length <= 5) {
+      slotSpacing = difficulty == GameDifficulty.kolay ? 70 : 60;
+    } else if (currentWord.length <= 7) {
+      slotSpacing = 50;
+    } else {
+      // Çok uzun kelimeler için ekrana sığacak şekilde hesapla
+      slotSpacing = maxWidth / currentWord.length;
+      if (slotSpacing > 45) slotSpacing = 45;
+      if (slotSpacing < 35) slotSpacing = 35;
+    }
+    
     double startX =
         size.x / 2 - (currentWord.length * slotSpacing) / 2 + (slotSpacing / 2);
 
     for (int i = 0; i < currentWord.length; i++) {
       add(
-        TargetSlot(index: i, char: currentWord[i])
+        TargetSlot(index: i, char: currentWord[i], slotSize: slotSpacing - 8)
           ..position = Vector2(startX + (i * slotSpacing), size.y - 80),
       );
     }
@@ -3408,10 +3759,15 @@ class LetterBubble extends PositionComponent
 class TargetSlot extends PositionComponent {
   final int index;
   final String char;
+  final double slotSize;
   bool isFilled = false;
 
-  TargetSlot({required this.index, required this.char}) {
-    size = Vector2(50, 60);
+  TargetSlot({
+    required this.index,
+    required this.char,
+    this.slotSize = 50,
+  }) {
+    size = Vector2(slotSize, slotSize * 1.2);
     anchor = Anchor.center;
   }
 
@@ -3431,8 +3787,10 @@ class TargetSlot extends PositionComponent {
     canvas.drawRRect(rect, paint);
 
     // Eğer dolduysa harfi göster, dolmadıysa silik göster
+    // Font boyutunu slot boyutuna göre ayarla
+    double fontSize = slotSize * 0.64; // Slotun %64'ü kadar font boyutu
     final textStyle = TextStyle(
-      fontSize: 32,
+      fontSize: fontSize,
       fontWeight: FontWeight.bold,
       color: isFilled ? Colors.white : Colors.white.withOpacity(0.2),
     );
@@ -4806,72 +5164,53 @@ class _SettingsSheetState extends State<SettingsSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxHeight: context.responsive.bottomSheetMaxHeight(),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(context.responsive.borderRadius(base: 30)),
+        ),
       ),
-      padding: const EdgeInsets.all(25),
+      padding: context.responsive.padding(all: 25),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 50,
+              width: context.responsive.spacing(base: 50),
               height: 5,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: context.responsive.spacing(base: 20)),
+            Text(
               "AYARLAR",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+              style: TextStyle(
+                fontSize: context.responsive.fontSize(
+                  small: 20,
+                  medium: 24,
+                  large: 28,
+                ),
+                fontWeight: FontWeight.w900,
+              ),
             ),
-            const SizedBox(height: 25),
-            _buildSettingTile(
-              icon: Icons.volume_up,
-              title: "Ses Efektleri",
-              value: SoundManager().soundEnabled,
-              onChanged: (val) async {
-                await SoundManager().toggleSound();
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 15),
-            _buildSettingTile(
-              icon: Icons.music_note,
-              title: "Müzik",
-              value: SoundManager().musicEnabled,
-              onChanged: (val) async {
-                await SoundManager().toggleMusic();
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 15),
-            _buildStatTile(
-              icon: Icons.star,
-              title: "Toplam Yıldız",
-              value: "${LevelStars.getAllStars()}/90",
-            ),
-            const SizedBox(height: 15),
-            _buildStatTile(
-              icon: Icons.emoji_events,
-              title: "Başarımlar",
-              value:
-                  "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
-            ),
-            const SizedBox(height: 20),
+            SizedBox(height: context.responsive.spacing(base: 25)),
 
-            // Reklamsız abonelik bölümü
+            // Reklamsız abonelik bölümü - EN ÜSTTE (Responsive)
             if (!_hasNoAdsSubscription)
               Container(
-                padding: const EdgeInsets.all(15),
+                padding: context.responsive.padding(all: 15),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(
+                    context.responsive.borderRadius(base: 20),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.purple.withOpacity(0.3),
@@ -4882,16 +5221,24 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 ),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.block, color: Colors.white, size: 28),
-                        SizedBox(width: 10),
+                        Icon(
+                          Icons.block,
+                          color: Colors.white,
+                          size: context.responsive.iconSize(base: 28),
+                        ),
+                        SizedBox(width: context.responsive.spacing(base: 10)),
                         Text(
                           'Reklamsız Oyna',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: context.responsive.fontSize(
+                              small: 18,
+                              medium: 20,
+                              large: 24,
+                            ),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -4948,7 +5295,7 @@ class _SettingsSheetState extends State<SettingsSheet> {
                     Icon(Icons.check_circle, color: Colors.green, size: 28),
                     SizedBox(width: 10),
                     Text(
-                      'Reklamsız Abonelik Aktif',
+                      'Reklamsız Premium Aktif',
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 16,
@@ -4958,6 +5305,43 @@ class _SettingsSheetState extends State<SettingsSheet> {
                   ],
                 ),
               ),
+
+            const SizedBox(height: 25),
+
+            // Ses ve müzik ayarları
+            _buildSettingTile(
+              icon: Icons.volume_up,
+              title: "Ses Efektleri",
+              value: SoundManager().soundEnabled,
+              onChanged: (val) async {
+                await SoundManager().toggleSound();
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 15),
+            _buildSettingTile(
+              icon: Icons.music_note,
+              title: "Müzik",
+              value: SoundManager().musicEnabled,
+              onChanged: (val) async {
+                await SoundManager().toggleMusic();
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 15),
+            _buildStatTile(
+              icon: Icons.star,
+              title: "Toplam Yıldız",
+              value:
+                  "${LevelStars.getAllStars()}/180", // 20 levels x 3 difficulties x 3 stars
+            ),
+            const SizedBox(height: 15),
+            _buildStatTile(
+              icon: Icons.emoji_events,
+              title: "Başarımlar",
+              value:
+                  "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
+            ),
             const SizedBox(height: 20),
 
             ElevatedButton.icon(

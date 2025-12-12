@@ -22,7 +22,7 @@ class PlayerLevel {
 
   static Future<Map<String, dynamic>> addXP(int amount) async {
     _currentXP += amount;
-    
+
     List<int> levelsGained = [];
     Map<String, int> rewards = {'coins': 0, 'gems': 0};
 
@@ -30,10 +30,10 @@ class PlayerLevel {
       _currentXP -= xpForNextLevel(_currentLevel);
       _currentLevel++;
       levelsGained.add(_currentLevel);
-      
+
       // Her seviye ödülü
       rewards['coins'] = (rewards['coins'] ?? 0) + (50 + (_currentLevel * 10));
-      
+
       // Her 5 seviyede elmas
       if (_currentLevel % 5 == 0) {
         rewards['gems'] = (rewards['gems'] ?? 0) + 5;
@@ -42,10 +42,7 @@ class PlayerLevel {
 
     await _save();
 
-    return {
-      'levelsGained': levelsGained,
-      'rewards': rewards,
-    };
+    return {'levelsGained': levelsGained, 'rewards': rewards};
   }
 
   static Future<void> _save() async {

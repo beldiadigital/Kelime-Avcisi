@@ -13,7 +13,7 @@ class TimeRecord {
   // Yıldız kriterleri (süreye göre)
   static int getStars(String difficulty, int seconds) {
     final target = targetTimes[difficulty] ?? 240;
-    
+
     if (seconds <= target * 0.6) {
       return 3; // %60 veya daha hızlı = 3 yıldız
     } else if (seconds <= target * 0.8) {
@@ -30,7 +30,7 @@ class TimeRecord {
     final prefs = await SharedPreferences.getInstance();
     final key = '$_keyPrefix$difficulty';
     final currentBest = prefs.getInt(key) ?? 999999;
-    
+
     if (seconds < currentBest) {
       await prefs.setInt(key, seconds);
     }

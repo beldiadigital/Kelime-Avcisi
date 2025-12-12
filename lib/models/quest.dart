@@ -91,9 +91,9 @@ class QuestManager {
 
   static Future<void> _checkResets() async {
     final now = DateTime.now();
-    
+
     // Daily reset (her gün gece 00:00)
-    if (_lastDailyReset == null || 
+    if (_lastDailyReset == null ||
         now.day != _lastDailyReset!.day ||
         now.month != _lastDailyReset!.month) {
       dailyQuests.clear();
@@ -113,10 +113,11 @@ class QuestManager {
   }
 
   static Future<void> updateProgress(String questId, int amount) async {
-    final quest = [...dailyQuests, ...weeklyQuests]
-        .where((q) => q.id == questId)
-        .firstOrNull;
-    
+    final quest = [
+      ...dailyQuests,
+      ...weeklyQuests,
+    ].where((q) => q.id == questId).firstOrNull;
+
     if (quest == null || quest.isCompleted) return;
 
     quest.progress += amount;
@@ -127,10 +128,11 @@ class QuestManager {
   }
 
   static Future<Map<String, int>> claimReward(String questId) async {
-    final quest = [...dailyQuests, ...weeklyQuests]
-        .where((q) => q.id == questId)
-        .firstOrNull;
-    
+    final quest = [
+      ...dailyQuests,
+      ...weeklyQuests,
+    ].where((q) => q.id == questId).firstOrNull;
+
     if (quest == null || !quest.isCompleted || quest.isClaimed) {
       return {};
     }
@@ -142,11 +144,11 @@ class QuestManager {
 
   static Future<void> _loadProgress() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Load last reset times
     final dailyStr = prefs.getString('last_daily_reset');
     if (dailyStr != null) _lastDailyReset = DateTime.parse(dailyStr);
-    
+
     final weeklyStr = prefs.getString('last_weekly_reset');
     if (weeklyStr != null) _lastWeeklyReset = DateTime.parse(weeklyStr);
 
@@ -158,7 +160,7 @@ class QuestManager {
         final progress = prefs.getInt('daily_quest_${i}_progress') ?? 0;
         final completed = prefs.getBool('daily_quest_${i}_completed') ?? false;
         final claimed = prefs.getBool('daily_quest_${i}_claimed') ?? false;
-        
+
         // Find and update quest
         final quest = dailyQuests.where((q) => q.id == id).firstOrNull;
         if (quest != null) {
@@ -177,7 +179,7 @@ class QuestManager {
         final progress = prefs.getInt('weekly_quest_${i}_progress') ?? 0;
         final completed = prefs.getBool('weekly_quest_${i}_completed') ?? false;
         final claimed = prefs.getBool('weekly_quest_${i}_claimed') ?? false;
-        
+
         final quest = weeklyQuests.where((q) => q.id == id).firstOrNull;
         if (quest != null) {
           quest.progress = progress;
@@ -190,13 +192,19 @@ class QuestManager {
 
   static Future<void> _saveProgress() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Save reset times
     if (_lastDailyReset != null) {
-      await prefs.setString('last_daily_reset', _lastDailyReset!.toIso8601String());
+      await prefs.setString(
+        'last_daily_reset',
+        _lastDailyReset!.toIso8601String(),
+      );
     }
     if (_lastWeeklyReset != null) {
-      await prefs.setString('last_weekly_reset', _lastWeeklyReset!.toIso8601String());
+      await prefs.setString(
+        'last_weekly_reset',
+        _lastWeeklyReset!.toIso8601String(),
+      );
     }
 
     // Save daily quests
@@ -221,8 +229,9 @@ class QuestManager {
   }
 
   static int get unclaimedCount {
-    return [...dailyQuests, ...weeklyQuests]
-        .where((q) => q.isCompleted && !q.isClaimed)
-        .length;
+    return [
+      ...dailyQuests,
+      ...weeklyQuests,
+    ].where((q) => q.isCompleted && !q.isClaimed).length;
   }
 }
