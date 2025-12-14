@@ -5728,6 +5728,26 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+
+            // Hakkında ve Gizlilik Politikası
+            TextButton.icon(
+              onPressed: _showAboutDialog,
+              icon: const Icon(Icons.info_outline, color: Colors.blue),
+              label: const Text(
+                "Hakkında",
+                style: TextStyle(color: Colors.blue, fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: _showPrivacyPolicy,
+              icon: const Icon(Icons.security, color: Colors.green),
+              label: const Text(
+                "Gizlilik Politikası",
+                style: TextStyle(color: Colors.green, fontSize: 16),
+              ),
+            ),
           ],
         ),
       ),
@@ -5795,6 +5815,143 @@ class _SettingsSheetState extends State<SettingsSheet> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAboutDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('ℹ️ Hakkında'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Kelime Avcısı',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Sürüm: 1.0.0',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      'Yapımcı: Beldia Digital',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Telif Hakkı © 2025 Tüm Hakları Saklıdır.',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15),
+              const Text(
+                'Kelime Avcısı, eğlenceli ve eğitici bir kelime oyunudur. Oyunu oynayarak sözcük bilginizi artırabilir ve seviye atabilirsiniz.',
+                style: TextStyle(fontSize: 14, height: 1.6),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Kapat'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPrivacyPolicy() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('🔒 Gizlilik Politikası'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPrivacySection(
+                'Toplanan Veriler',
+                '• Oyun ilerleme ve puanları (cihazınızda saklanır)\n• Başarımlar ve ödüller\n• Kullanıcı tercihler (ses, müzik)',
+              ),
+              const SizedBox(height: 15),
+              _buildPrivacySection(
+                'Üçüncü Taraf Hizmetleri',
+                '• Google AdMob: Reklam gösterimi\n• Apple App Store: Satın alma işlemleri\n• Google Play Store: Satın alma işlemleri',
+              ),
+              const SizedBox(height: 15),
+              _buildPrivacySection(
+                'Veri Paylaşımı',
+                '• Oyun verileri sadece cihazınızda saklanır\n• Google AdMob, reklam sunumu için anonimleştirilmiş veriler kullanabilir\n• Üçüncü taraf hizmetleri kendi gizlilik politikalarına uygun olarak verileri işler',
+              ),
+              const SizedBox(height: 15),
+              _buildPrivacySection(
+                'Veri Güvenliği',
+                '• Tüm veriler yerel olarak cihazınızda saklanır\n• Hiçbir bulut sunucusuna gönderilmez\n• GDPR ve App Store gizlilik gerekliliklerine uyumludur',
+              ),
+              const SizedBox(height: 15),
+              const Text(
+                'Son Güncelleme: Aralık 2025',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Kapat'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrivacySection(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.deepPurple,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          content,
+          style: const TextStyle(fontSize: 13, height: 1.5),
+        ),
+      ],
     );
   }
 }
