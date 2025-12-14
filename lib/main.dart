@@ -4755,6 +4755,42 @@ class _GemStorePageState extends State<GemStorePage> {
     }
   }
 
+  Future<void> _restorePurchases() async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await IAPService.restorePurchases();
+
+      if (mounted) {
+        Navigator.pop(context); // Loading dialog'u kapat
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Satın alımları geri yükleme tamamlandı!'),
+            duration: SnackBarDurations.short,
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Sayfayı yenile
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Loading dialog'u kapat
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Hata: $e'),
+            duration: SnackBarDurations.short,
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   void _showSuccessDialog(int gems, int bonus) {
     showDialog(
       context: context,
@@ -5062,13 +5098,30 @@ class _GemStorePageState extends State<GemStorePage> {
               // Alt bilgi
               Container(
                 padding: const EdgeInsets.all(20),
-                child: Text(
-                  '🔒 Güvenli ödeme ile App Store/Play Store üzerinden satın alınır',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 12,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      '🔒 Güvenli ödeme ile App Store/Play Store üzerinden satın alınır',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    // Restore Purchases Button
+                    TextButton(
+                      onPressed: _restorePurchases,
+                      child: Text(
+                        'Satın Alımları Geri Yükle',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 12,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

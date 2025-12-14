@@ -162,6 +162,17 @@ class IAPService {
     }
   }
 
+  // Satın almaları geri yükle
+  static Future<void> restorePurchases() async {
+    try {
+      await _instance.restorePurchases();
+      print('Purchases restored');
+    } catch (e) {
+      print('Error restoring purchases: $e');
+      rethrow;
+    }
+  }
+
   // Servisi kapat
   static void dispose() {
     _subscription?.cancel();
