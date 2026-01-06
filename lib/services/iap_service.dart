@@ -63,17 +63,17 @@ class IAPService {
   }
 
   // Satın alma güncelleme callback'i
-  static void _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
+  static void _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) async {
     for (final PurchaseDetails purchase in purchaseDetailsList) {
       if (purchase.status == PurchaseStatus.purchased) {
-        _verifyAndDeliverProduct(purchase);
+        await _verifyAndDeliverProduct(purchase);
       } else if (purchase.status == PurchaseStatus.error) {
         print('Purchase error: ${purchase.error}');
       }
 
       // Pending olmayan satın almaları tamamla
       if (purchase.pendingCompletePurchase) {
-        _instance.completePurchase(purchase);
+        await _instance.completePurchase(purchase);
       }
     }
   }

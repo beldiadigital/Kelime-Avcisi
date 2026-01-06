@@ -1981,67 +1981,6 @@ class _MainMenuPageState extends State<MainMenuPage>
 
                       const SizedBox(height: 30),
 
-                      // Günlük Ödül Butonu (Büyük ve Göze Çarpan)
-                      if (DailyRewardSystem.canClaimToday)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: GestureDetector(
-                            onTap: () => _showDailyReward(),
-                            child: Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFFFD700),
-                                    Color(0xFFFF6B00),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.orange.withOpacity(0.5),
-                                    blurRadius: 20,
-                                    spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "🎁",
-                                    style: TextStyle(fontSize: 30),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "GÜNLÜK ÖDÜL!",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Gün ${DailyRewardSystem.currentStreak + 1}/7 - Al!",
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.9),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      const SizedBox(height: 15),
-
                       // Özel Özellik Butonları (Görevler, Mağaza, Temalar)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -2121,59 +2060,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                           ],
                         ),
                       ),
-
-                      const SizedBox(height: 30),
-
-                      // Günlük ödül butonu
-                      if (DailyRewardSystem.canClaimToday)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 10,
-                          ),
-                          child: GestureDetector(
-                            onTap: _showDailyReward,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFFFD700),
-                                    Color(0xFFFFA500),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.orange.withOpacity(0.5),
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                  Text("🎁", style: TextStyle(fontSize: 24)),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    "GÜNLÜK ÖDÜLÜNÜ AL!",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      const SizedBox(height: 10),
 
                       const SizedBox(height: 20),
                     ],
