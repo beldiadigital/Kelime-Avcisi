@@ -8,17 +8,17 @@ class IAPService {
   static StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   // Elmas paket ID'leri (App Store Connect'te tanımlanmalı)
-  static const String gems50 = 'kelimeavcisi_50gems';
-  static const String gems100 = 'kelimeavcisi_100gems';
-  static const String gems200 = 'kelimeavcisi_200gems';
+  static const String gems100 = 'com.kelimeavcisi.gems100';
+  static const String gems200 = 'com.kelimeavcisi.gems200';
+  static const String gems500 = 'com.kelimeavcisi.gems500';
 
   // Abonelik ID'si
   static const String subscriptionNoAds = 'kelimeavcisi_noads_monthly';
 
   static const Set<String> _productIds = {
-    gems50,
     gems100,
     gems200,
+    gems500,
     subscriptionNoAds,
   };
 
@@ -83,14 +83,14 @@ class IAPService {
     int gemsToAdd = 0;
 
     switch (purchase.productID) {
-      case gems50:
-        gemsToAdd = 50;
-        break;
       case gems100:
-        gemsToAdd = 110; // 100 + 10 bonus
+        gemsToAdd = 100;
         break;
       case gems200:
-        gemsToAdd = 230; // 200 + 30 bonus
+        gemsToAdd = 200;
+        break;
+      case gems500:
+        gemsToAdd = 500;
         break;
       case subscriptionNoAds:
         // Reklamsız aboneliği aktifleştir

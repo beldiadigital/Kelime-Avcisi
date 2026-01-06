@@ -5151,42 +5151,40 @@ class _GemStorePageState extends State<GemStorePage> {
   // Elmas paketleri (sadece gerçek parayla alınabilir)
   final List<Map<String, dynamic>> gemPackages = [
     {
-      'gems': 50,
-      'price': '₺15.99',
-      'priceValue': 15.99,
-      'icon': '💎',
-      'title': '50 Elmas',
-      'description': 'Başlangıç paketi',
-    },
-    {
       'gems': 100,
-      'price': '₺19.99',
-      'priceValue': 19.99,
-      'icon': '💎',
-      'title': '100 Elmas + 10 Bonus',
-      'description': 'Popüler seçim',
-      'bonus': 10,
-    },
-    {
-      'gems': 200,
       'price': '₺29.99',
       'priceValue': 29.99,
       'icon': '💎',
-      'title': '200 Elmas + 30 Bonus',
+      'title': '100 Elmas',
+      'description': 'Başlangıç paketi',
+    },
+    {
+      'gems': 200,
+      'price': '₺49.99',
+      'priceValue': 49.99,
+      'icon': '💎',
+      'title': '200 Elmas',
+      'description': 'Popüler seçim',
+    },
+    {
+      'gems': 500,
+      'price': '₺79.99',
+      'priceValue': 79.99,
+      'icon': '💎',
+      'title': '500 Elmas',
       'description': 'En iyi değer',
-      'bonus': 30,
     },
   ];
 
   Future<void> _purchaseGems(int gems, int bonus, double price) async {
     // Ürün ID'sini belirle
     String productId;
-    if (gems == 50) {
-      productId = IAPService.gems50;
-    } else if (gems == 100) {
+    if (gems == 100) {
       productId = IAPService.gems100;
     } else if (gems == 200) {
       productId = IAPService.gems200;
+    } else if (gems == 500) {
+      productId = IAPService.gems500;
     } else {
       return;
     }
