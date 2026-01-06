@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LifeSystem {
-  static const int maxLives = 5;
+  static const int maxLives = 10;
   static const int rechargeMinutes = 30;
 
   static int _currentLives = maxLives;

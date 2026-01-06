@@ -8,8 +8,6 @@ import 'package:flame/events.dart';
 import 'package:flame/particles.dart';
 import 'package:flame/effects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:io' show Platform;
 import 'package:confetti/confetti.dart';
 import 'package:share_plus/share_plus.dart';
 import 'models/achievement.dart';
@@ -25,6 +23,7 @@ import 'models/time_record.dart';
 import 'models/app_rating.dart';
 import 'services/sound_manager.dart';
 import 'services/iap_service.dart';
+
 import 'utils/responsive_helper.dart';
 
 // ==========================================
@@ -38,32 +37,32 @@ class GameConstants {
   static const int comboBonus = 50;
   static const int perfectLevelBonus = 200;
   static const int goldMultiplier = 2;
-  
+
   // Para kazanma
   static const int baseCoins = 50;
   static const int comboCoinsBonus = 10;
   static const int levelCompletionCoins = 100;
   static const int gemsPerStar = 2;
-  
+
   // XP kazanma
   static const int baseXP = 50;
   static const int perfectLevelXP = 100;
   static const int starXPBonus = 25;
-  
+
   // Yıldız kriterleri
   static const int oneStar = 0; // 0 hata
   static const int twoStars = 1; // Max 1 hata
   static const int threeStars = 3; // Max 3 hata
-  
+
   // Özel balon süreleri (saniye)
   static const int goldBalloonDuration = 10;
   static const int slowBalloonDuration = 10;
   static const int speedBalloonDuration = 10;
-  
+
   // Can sistemi
-  static const int maxLives = 5;
+  // static const int maxLives = 5; // Artık LifeSystem.maxLives kullanılacak
   static const int liveRegenMinutes = 20;
-  
+
   // Zamanlayıcı
   static const int timerTickSeconds = 1;
 }
@@ -75,28 +74,28 @@ class UIConstants {
   static const double smallPadding = 8.0;
   static const double largePadding = 20.0;
   static const double gridSpacing = 12.0;
-  
+
   // Border radius
   static const double defaultRadius = 15.0;
   static const double largeRadius = 25.0;
   static const double smallRadius = 10.0;
-  
+
   // Icon boyutları
   static const double smallIcon = 20.0;
   static const double mediumIcon = 24.0;
   static const double largeIcon = 40.0;
   static const double extraLargeIcon = 80.0;
-  
+
   // Font boyutları
   static const double smallFont = 12.0;
   static const double mediumFont = 16.0;
   static const double largeFont = 24.0;
   static const double titleFont = 32.0;
-  
+
   // Grid layout
   static const double levelCardAspectRatio = 0.8;
   static const int levelGridCrossAxisCount = 5;
-  
+
   // Animasyon süreleri (milliseconds)
   static const int shortAnimation = 300;
   static const int mediumAnimation = 500;
@@ -110,10 +109,10 @@ class PromoConstants {
   static const int removeAdsPromoDays = 3;
   static const int removeAdsPromoMaxShows = 10;
   static const int removeAdsPromoDelayMs = 500;
-  
+
   // Rating promosyonu
   static const int ratingPromoDelayMs = 500;
-  
+
   // Günlük ödül
   static const int dailyRewardDelayMs = 500;
 }
@@ -128,36 +127,6 @@ class SnackBarDurations {
 // ==========================================
 // 1. VERİ YAPILARI VE KATEGORİLER
 // ==========================================
-
-// ADMOB YÖNETİMİ
-class AdMobHelper {
-  // Test modunu açmak için true yapın
-  // PRODUCTION İÇİN FALSE YAPMAYI UNUTMAYIN!
-  static const bool isTestMode = false;
-
-  static String get bannerAdUnitId {
-    if (isTestMode) {
-      // Test reklamları
-      if (Platform.isAndroid) {
-        return 'ca-app-pub-3940256099942544/6300978111'; // Test Banner Android
-      } else if (Platform.isIOS) {
-        return 'ca-app-pub-3940256099942544/2934735716'; // Test Banner iOS
-      }
-    } else {
-      // Gerçek reklamlar (production)
-      if (Platform.isAndroid) {
-        return 'ca-app-pub-9098317866883430/5233275608';
-      } else if (Platform.isIOS) {
-        return 'ca-app-pub-9098317866883430/5233275608';
-      }
-    }
-    throw UnsupportedError('Unsupported platform');
-  }
-
-  static Future<void> initialize() async {
-    await MobileAds.instance.initialize();
-  }
-}
 
 enum GameDifficulty { kolay, orta, zor }
 
@@ -447,36 +416,242 @@ class LevelData {
             timeLimit: 28,
             hasMovingSlots: true,
           ),
-          LevelData(level: 21, difficulty: difficulty, word: "AYAKKABI", targetScore: 600, timeLimit: 28, hasMovingSlots: true),
-          LevelData(level: 22, difficulty: difficulty, word: "PORTAKAL", targetScore: 600, timeLimit: 27, hasMovingSlots: true),
-          LevelData(level: 23, difficulty: difficulty, word: "PASTA", targetScore: 650, timeLimit: 27),
-          LevelData(level: 24, difficulty: difficulty, word: "SAAT", targetScore: 650, timeLimit: 26),
-          LevelData(level: 25, difficulty: difficulty, word: "KALEM", targetScore: 700, timeLimit: 26, hasMovingSlots: true),
-          LevelData(level: 26, difficulty: difficulty, word: "TELEFON", targetScore: 700, timeLimit: 25, hasMovingSlots: true),
-          LevelData(level: 27, difficulty: difficulty, word: "TABAK", targetScore: 750, timeLimit: 25),
-          LevelData(level: 28, difficulty: difficulty, word: "KAŞIK", targetScore: 750, timeLimit: 24, hasMovingSlots: true),
-          LevelData(level: 29, difficulty: difficulty, word: "ÇATAL", targetScore: 800, timeLimit: 24),
-          LevelData(level: 30, difficulty: difficulty, word: "BARDAK", targetScore: 800, timeLimit: 23, hasMovingSlots: true),
-          LevelData(level: 31, difficulty: difficulty, word: "FINCAN", targetScore: 850, timeLimit: 23, hasMovingSlots: true),
-          LevelData(level: 32, difficulty: difficulty, word: "YASTIK", targetScore: 850, timeLimit: 22, hasMovingSlots: true),
-          LevelData(level: 33, difficulty: difficulty, word: "BATTANIYE", targetScore: 900, timeLimit: 22, hasMovingSlots: true),
-          LevelData(level: 34, difficulty: difficulty, word: "LAMBA", targetScore: 900, timeLimit: 21, hasMovingSlots: true),
-          LevelData(level: 35, difficulty: difficulty, word: "AYDINLIK", targetScore: 950, timeLimit: 21, hasMovingSlots: true),
-          LevelData(level: 36, difficulty: difficulty, word: "AYAKKABI", targetScore: 950, timeLimit: 20, hasMovingSlots: true),
-          LevelData(level: 37, difficulty: difficulty, word: "TERLIK", targetScore: 1000, timeLimit: 20, hasMovingSlots: true),
-          LevelData(level: 38, difficulty: difficulty, word: "ÇORAP", targetScore: 1000, timeLimit: 19, hasMovingSlots: true),
-          LevelData(level: 39, difficulty: difficulty, word: "ŞAPKA", targetScore: 1050, timeLimit: 19, hasMovingSlots: true),
-          LevelData(level: 40, difficulty: difficulty, word: "GÖZLÜK", targetScore: 1050, timeLimit: 18, hasMovingSlots: true),
-          LevelData(level: 41, difficulty: difficulty, word: "KEMER", targetScore: 1100, timeLimit: 18, hasMovingSlots: true),
-          LevelData(level: 42, difficulty: difficulty, word: "ÇANTA", targetScore: 1100, timeLimit: 17, hasMovingSlots: true),
-          LevelData(level: 43, difficulty: difficulty, word: "BAVUL", targetScore: 1150, timeLimit: 17, hasMovingSlots: true),
-          LevelData(level: 44, difficulty: difficulty, word: "ANAHTAR", targetScore: 1150, timeLimit: 16, hasMovingSlots: true),
-          LevelData(level: 45, difficulty: difficulty, word: "PETEK", targetScore: 1200, timeLimit: 16, hasMovingSlots: true),
-          LevelData(level: 46, difficulty: difficulty, word: "SÜPÜRGE", targetScore: 1200, timeLimit: 15, hasMovingSlots: true),
-          LevelData(level: 47, difficulty: difficulty, word: "FIRÇA", targetScore: 1250, timeLimit: 15, hasMovingSlots: true),
-          LevelData(level: 48, difficulty: difficulty, word: "SABUN", targetScore: 1250, timeLimit: 14, hasMovingSlots: true),
-          LevelData(level: 49, difficulty: difficulty, word: "ŞİŞE", targetScore: 1300, timeLimit: 14, hasMovingSlots: true),
-          LevelData(level: 50, difficulty: difficulty, word: "PAPATYA", targetScore: 1500, timeLimit: 13, hasMovingSlots: true),
+          LevelData(
+            level: 21,
+            difficulty: difficulty,
+            word: "AYAKKABI",
+            targetScore: 600,
+            timeLimit: 28,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 22,
+            difficulty: difficulty,
+            word: "PORTAKAL",
+            targetScore: 600,
+            timeLimit: 27,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 23,
+            difficulty: difficulty,
+            word: "PASTA",
+            targetScore: 650,
+            timeLimit: 27,
+          ),
+          LevelData(
+            level: 24,
+            difficulty: difficulty,
+            word: "SAAT",
+            targetScore: 650,
+            timeLimit: 26,
+          ),
+          LevelData(
+            level: 25,
+            difficulty: difficulty,
+            word: "KALEM",
+            targetScore: 700,
+            timeLimit: 26,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 26,
+            difficulty: difficulty,
+            word: "TELEFON",
+            targetScore: 700,
+            timeLimit: 25,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 27,
+            difficulty: difficulty,
+            word: "TABAK",
+            targetScore: 750,
+            timeLimit: 25,
+          ),
+          LevelData(
+            level: 28,
+            difficulty: difficulty,
+            word: "KAŞIK",
+            targetScore: 750,
+            timeLimit: 24,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 29,
+            difficulty: difficulty,
+            word: "ÇATAL",
+            targetScore: 800,
+            timeLimit: 24,
+          ),
+          LevelData(
+            level: 30,
+            difficulty: difficulty,
+            word: "BARDAK",
+            targetScore: 800,
+            timeLimit: 23,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 31,
+            difficulty: difficulty,
+            word: "FINCAN",
+            targetScore: 850,
+            timeLimit: 23,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 32,
+            difficulty: difficulty,
+            word: "YASTIK",
+            targetScore: 850,
+            timeLimit: 22,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 33,
+            difficulty: difficulty,
+            word: "BATTANIYE",
+            targetScore: 900,
+            timeLimit: 22,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 34,
+            difficulty: difficulty,
+            word: "LAMBA",
+            targetScore: 900,
+            timeLimit: 21,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 35,
+            difficulty: difficulty,
+            word: "AYDINLIK",
+            targetScore: 950,
+            timeLimit: 21,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 36,
+            difficulty: difficulty,
+            word: "AYAKKABI",
+            targetScore: 950,
+            timeLimit: 20,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 37,
+            difficulty: difficulty,
+            word: "TERLIK",
+            targetScore: 1000,
+            timeLimit: 20,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 38,
+            difficulty: difficulty,
+            word: "ÇORAP",
+            targetScore: 1000,
+            timeLimit: 19,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 39,
+            difficulty: difficulty,
+            word: "ŞAPKA",
+            targetScore: 1050,
+            timeLimit: 19,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 40,
+            difficulty: difficulty,
+            word: "GÖZLÜK",
+            targetScore: 1050,
+            timeLimit: 18,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 41,
+            difficulty: difficulty,
+            word: "KEMER",
+            targetScore: 1100,
+            timeLimit: 18,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 42,
+            difficulty: difficulty,
+            word: "ÇANTA",
+            targetScore: 1100,
+            timeLimit: 17,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 43,
+            difficulty: difficulty,
+            word: "BAVUL",
+            targetScore: 1150,
+            timeLimit: 17,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 44,
+            difficulty: difficulty,
+            word: "ANAHTAR",
+            targetScore: 1150,
+            timeLimit: 16,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 45,
+            difficulty: difficulty,
+            word: "PETEK",
+            targetScore: 1200,
+            timeLimit: 16,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 46,
+            difficulty: difficulty,
+            word: "SÜPÜRGE",
+            targetScore: 1200,
+            timeLimit: 15,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 47,
+            difficulty: difficulty,
+            word: "FIRÇA",
+            targetScore: 1250,
+            timeLimit: 15,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 48,
+            difficulty: difficulty,
+            word: "SABUN",
+            targetScore: 1250,
+            timeLimit: 14,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 49,
+            difficulty: difficulty,
+            word: "ŞİŞE",
+            targetScore: 1300,
+            timeLimit: 14,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 50,
+            difficulty: difficulty,
+            word: "PAPATYA",
+            targetScore: 1500,
+            timeLimit: 13,
+            hasMovingSlots: true,
+          ),
         ];
 
       case GameDifficulty.orta:
@@ -636,36 +811,246 @@ class LevelData {
             timeLimit: 14,
             hasMovingSlots: true,
           ),
-          LevelData(level: 21, difficulty: difficulty, word: "BİLGİSAYAR", targetScore: 1050, timeLimit: 14, hasMovingSlots: true),
-          LevelData(level: 22, difficulty: difficulty, word: "EKRAN", targetScore: 1100, timeLimit: 13, hasMovingSlots: true),
-          LevelData(level: 23, difficulty: difficulty, word: "KLAVYE", targetScore: 1150, timeLimit: 13, hasMovingSlots: true),
-          LevelData(level: 24, difficulty: difficulty, word: "FARE", targetScore: 1200, timeLimit: 12, hasMovingSlots: true),
-          LevelData(level: 25, difficulty: difficulty, word: "HOPARLÖR", targetScore: 1250, timeLimit: 12, hasMovingSlots: true),
-          LevelData(level: 26, difficulty: difficulty, word: "KULAKLIK", targetScore: 1300, timeLimit: 11, hasMovingSlots: true),
-          LevelData(level: 27, difficulty: difficulty, word: "MİKROFON", targetScore: 1350, timeLimit: 11, hasMovingSlots: true),
-          LevelData(level: 28, difficulty: difficulty, word: "KAMERA", targetScore: 1400, timeLimit: 10, hasMovingSlots: true),
-          LevelData(level: 29, difficulty: difficulty, word: "FOTOĞRAF", targetScore: 1450, timeLimit: 10, hasMovingSlots: true),
-          LevelData(level: 30, difficulty: difficulty, word: "TABLET", targetScore: 1500, timeLimit: 9, hasMovingSlots: true),
-          LevelData(level: 31, difficulty: difficulty, word: "ŞARJ", targetScore: 1550, timeLimit: 9, hasMovingSlots: true),
-          LevelData(level: 32, difficulty: difficulty, word: "PİL", targetScore: 1600, timeLimit: 8, hasMovingSlots: true),
-          LevelData(level: 33, difficulty: difficulty, word: "ADAPTÖR", targetScore: 1650, timeLimit: 8, hasMovingSlots: true),
-          LevelData(level: 34, difficulty: difficulty, word: "KABLO", targetScore: 1700, timeLimit: 7, hasMovingSlots: true),
-          LevelData(level: 35, difficulty: difficulty, word: "PRIZ", targetScore: 1750, timeLimit: 7, hasMovingSlots: true),
-          LevelData(level: 36, difficulty: difficulty, word: "AMPUL", targetScore: 1800, timeLimit: 6, hasMovingSlots: true),
-          LevelData(level: 37, difficulty: difficulty, word: "DÜĞMELERİ", targetScore: 1850, timeLimit: 6, hasMovingSlots: true),
-          LevelData(level: 38, difficulty: difficulty, word: "TUŞLAR", targetScore: 1900, timeLimit: 5, hasMovingSlots: true),
-          LevelData(level: 39, difficulty: difficulty, word: "EKRANLIK", targetScore: 1950, timeLimit: 5, hasMovingSlots: true),
-          LevelData(level: 40, difficulty: difficulty, word: "MENÜ", targetScore: 2000, timeLimit: 4, hasMovingSlots: true),
-          LevelData(level: 41, difficulty: difficulty, word: "SAYFA", targetScore: 2050, timeLimit: 4, hasMovingSlots: true),
-          LevelData(level: 42, difficulty: difficulty, word: "BAŞLIK", targetScore: 2100, timeLimit: 3, hasMovingSlots: true),
-          LevelData(level: 43, difficulty: difficulty, word: "PARAGRAF", targetScore: 2150, timeLimit: 3, hasMovingSlots: true),
-          LevelData(level: 44, difficulty: difficulty, word: "CÜMLE", targetScore: 2200, timeLimit: 2, hasMovingSlots: true),
-          LevelData(level: 45, difficulty: difficulty, word: "KELİME", targetScore: 2250, timeLimit: 2, hasMovingSlots: true),
-          LevelData(level: 46, difficulty: difficulty, word: "HARF", targetScore: 2300, timeLimit: 1, hasMovingSlots: true),
-          LevelData(level: 47, difficulty: difficulty, word: "RAKAM", targetScore: 2350, timeLimit: 1, hasMovingSlots: true),
-          LevelData(level: 48, difficulty: difficulty, word: "SEMBOL", targetScore: 2400, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 49, difficulty: difficulty, word: "İŞARET", targetScore: 2450, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 50, difficulty: difficulty, word: "BAYRAK", targetScore: 2500, timeLimit: 0, hasMovingSlots: true),
+          LevelData(
+            level: 21,
+            difficulty: difficulty,
+            word: "BİLGİSAYAR",
+            targetScore: 1050,
+            timeLimit: 14,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 22,
+            difficulty: difficulty,
+            word: "EKRAN",
+            targetScore: 1100,
+            timeLimit: 13,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 23,
+            difficulty: difficulty,
+            word: "KLAVYE",
+            targetScore: 1150,
+            timeLimit: 13,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 24,
+            difficulty: difficulty,
+            word: "FARE",
+            targetScore: 1200,
+            timeLimit: 12,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 25,
+            difficulty: difficulty,
+            word: "HOPARLÖR",
+            targetScore: 1250,
+            timeLimit: 12,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 26,
+            difficulty: difficulty,
+            word: "KULAKLIK",
+            targetScore: 1300,
+            timeLimit: 11,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 27,
+            difficulty: difficulty,
+            word: "MİKROFON",
+            targetScore: 1350,
+            timeLimit: 11,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 28,
+            difficulty: difficulty,
+            word: "KAMERA",
+            targetScore: 1400,
+            timeLimit: 10,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 29,
+            difficulty: difficulty,
+            word: "FOTOĞRAF",
+            targetScore: 1450,
+            timeLimit: 10,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 30,
+            difficulty: difficulty,
+            word: "TABLET",
+            targetScore: 1500,
+            timeLimit: 9,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 31,
+            difficulty: difficulty,
+            word: "ŞARJ",
+            targetScore: 1550,
+            timeLimit: 9,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 32,
+            difficulty: difficulty,
+            word: "PİL",
+            targetScore: 1600,
+            timeLimit: 8,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 33,
+            difficulty: difficulty,
+            word: "ADAPTÖR",
+            targetScore: 1650,
+            timeLimit: 8,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 34,
+            difficulty: difficulty,
+            word: "KABLO",
+            targetScore: 1700,
+            timeLimit: 7,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 35,
+            difficulty: difficulty,
+            word: "PRIZ",
+            targetScore: 1750,
+            timeLimit: 7,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 36,
+            difficulty: difficulty,
+            word: "AMPUL",
+            targetScore: 1800,
+            timeLimit: 6,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 37,
+            difficulty: difficulty,
+            word: "DÜĞMELERİ",
+            targetScore: 1850,
+            timeLimit: 6,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 38,
+            difficulty: difficulty,
+            word: "TUŞLAR",
+            targetScore: 1900,
+            timeLimit: 5,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 39,
+            difficulty: difficulty,
+            word: "EKRANLIK",
+            targetScore: 1950,
+            timeLimit: 5,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 40,
+            difficulty: difficulty,
+            word: "MENÜ",
+            targetScore: 2000,
+            timeLimit: 4,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 41,
+            difficulty: difficulty,
+            word: "SAYFA",
+            targetScore: 2050,
+            timeLimit: 4,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 42,
+            difficulty: difficulty,
+            word: "BAŞLIK",
+            targetScore: 2100,
+            timeLimit: 3,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 43,
+            difficulty: difficulty,
+            word: "PARAGRAF",
+            targetScore: 2150,
+            timeLimit: 3,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 44,
+            difficulty: difficulty,
+            word: "CÜMLE",
+            targetScore: 2200,
+            timeLimit: 2,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 45,
+            difficulty: difficulty,
+            word: "KELİME",
+            targetScore: 2250,
+            timeLimit: 2,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 46,
+            difficulty: difficulty,
+            word: "HARF",
+            targetScore: 2300,
+            timeLimit: 1,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 47,
+            difficulty: difficulty,
+            word: "RAKAM",
+            targetScore: 2350,
+            timeLimit: 1,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 48,
+            difficulty: difficulty,
+            word: "SEMBOL",
+            targetScore: 2400,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 49,
+            difficulty: difficulty,
+            word: "İŞARET",
+            targetScore: 2450,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 50,
+            difficulty: difficulty,
+            word: "BAYRAK",
+            targetScore: 2500,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
         ];
 
       case GameDifficulty.zor:
@@ -830,36 +1215,246 @@ class LevelData {
             timeLimit: 10,
             hasMovingSlots: true,
           ),
-          LevelData(level: 21, difficulty: difficulty, word: "ELEKTRİK", targetScore: 1350, timeLimit: 10, hasMovingSlots: true),
-          LevelData(level: 22, difficulty: difficulty, word: "DÜZENLEMEK", targetScore: 1400, timeLimit: 9, hasMovingSlots: true),
-          LevelData(level: 23, difficulty: difficulty, word: "YAZARKASA", targetScore: 1450, timeLimit: 9, hasMovingSlots: true),
-          LevelData(level: 24, difficulty: difficulty, word: "TASARIM", targetScore: 1500, timeLimit: 8, hasMovingSlots: true),
-          LevelData(level: 25, difficulty: difficulty, word: "MİMARİ", targetScore: 1550, timeLimit: 8, hasMovingSlots: true),
-          LevelData(level: 26, difficulty: difficulty, word: "MÜHENDİSLİK", targetScore: 1600, timeLimit: 7, hasMovingSlots: true),
-          LevelData(level: 27, difficulty: difficulty, word: "PROJE", targetScore: 1650, timeLimit: 7, hasMovingSlots: true),
-          LevelData(level: 28, difficulty: difficulty, word: "GELİŞTİRME", targetScore: 1700, timeLimit: 6, hasMovingSlots: true),
-          LevelData(level: 29, difficulty: difficulty, word: "PROGRAMLAMA", targetScore: 1750, timeLimit: 6, hasMovingSlots: true),
-          LevelData(level: 30, difficulty: difficulty, word: "UYGULAMA", targetScore: 1800, timeLimit: 5, hasMovingSlots: true),
-          LevelData(level: 31, difficulty: difficulty, word: "WEB SİTESİ", targetScore: 1850, timeLimit: 5, hasMovingSlots: true),
-          LevelData(level: 32, difficulty: difficulty, word: "PLATFORM", targetScore: 1900, timeLimit: 4, hasMovingSlots: true),
-          LevelData(level: 33, difficulty: difficulty, word: "SİSTEM", targetScore: 1950, timeLimit: 4, hasMovingSlots: true),
-          LevelData(level: 34, difficulty: difficulty, word: "YAZILIM", targetScore: 2000, timeLimit: 3, hasMovingSlots: true),
-          LevelData(level: 35, difficulty: difficulty, word: "DONANIM", targetScore: 2050, timeLimit: 3, hasMovingSlots: true),
-          LevelData(level: 36, difficulty: difficulty, word: "SUNUCU", targetScore: 2100, timeLimit: 2, hasMovingSlots: true),
-          LevelData(level: 37, difficulty: difficulty, word: "VERİTABANI", targetScore: 2150, timeLimit: 2, hasMovingSlots: true),
-          LevelData(level: 38, difficulty: difficulty, word: "AĞLAR", targetScore: 2200, timeLimit: 1, hasMovingSlots: true),
-          LevelData(level: 39, difficulty: difficulty, word: "GÜVENLİK", targetScore: 2250, timeLimit: 1, hasMovingSlots: true),
-          LevelData(level: 40, difficulty: difficulty, word: "ŞİFRELEME", targetScore: 2300, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 41, difficulty: difficulty, word: "KORUMA", targetScore: 2350, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 42, difficulty: difficulty, word: "YEDEKLEME", targetScore: 2400, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 43, difficulty: difficulty, word: "DEPOLAMA", targetScore: 2450, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 44, difficulty: difficulty, word: "BULUT", targetScore: 2500, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 45, difficulty: difficulty, word: "SERVİS", targetScore: 2550, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 46, difficulty: difficulty, word: "BULUT", targetScore: 2600, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 47, difficulty: difficulty, word: "YAYINLAMA", targetScore: 2650, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 48, difficulty: difficulty, word: "GÜNCELLEME", targetScore: 2700, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 49, difficulty: difficulty, word: "VERSİYON", targetScore: 2750, timeLimit: 0, hasMovingSlots: true),
-          LevelData(level: 50, difficulty: difficulty, word: "SÜRÜM", targetScore: 3000, timeLimit: 0, hasMovingSlots: true),
+          LevelData(
+            level: 21,
+            difficulty: difficulty,
+            word: "ELEKTRİK",
+            targetScore: 1350,
+            timeLimit: 10,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 22,
+            difficulty: difficulty,
+            word: "DÜZENLEMEK",
+            targetScore: 1400,
+            timeLimit: 9,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 23,
+            difficulty: difficulty,
+            word: "YAZARKASA",
+            targetScore: 1450,
+            timeLimit: 9,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 24,
+            difficulty: difficulty,
+            word: "TASARIM",
+            targetScore: 1500,
+            timeLimit: 8,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 25,
+            difficulty: difficulty,
+            word: "MİMARİ",
+            targetScore: 1550,
+            timeLimit: 8,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 26,
+            difficulty: difficulty,
+            word: "MÜHENDİSLİK",
+            targetScore: 1600,
+            timeLimit: 7,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 27,
+            difficulty: difficulty,
+            word: "PROJE",
+            targetScore: 1650,
+            timeLimit: 7,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 28,
+            difficulty: difficulty,
+            word: "GELİŞTİRME",
+            targetScore: 1700,
+            timeLimit: 6,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 29,
+            difficulty: difficulty,
+            word: "PROGRAMLAMA",
+            targetScore: 1750,
+            timeLimit: 6,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 30,
+            difficulty: difficulty,
+            word: "UYGULAMA",
+            targetScore: 1800,
+            timeLimit: 5,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 31,
+            difficulty: difficulty,
+            word: "WEB SİTESİ",
+            targetScore: 1850,
+            timeLimit: 5,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 32,
+            difficulty: difficulty,
+            word: "PLATFORM",
+            targetScore: 1900,
+            timeLimit: 4,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 33,
+            difficulty: difficulty,
+            word: "SİSTEM",
+            targetScore: 1950,
+            timeLimit: 4,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 34,
+            difficulty: difficulty,
+            word: "YAZILIM",
+            targetScore: 2000,
+            timeLimit: 3,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 35,
+            difficulty: difficulty,
+            word: "DONANIM",
+            targetScore: 2050,
+            timeLimit: 3,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 36,
+            difficulty: difficulty,
+            word: "SUNUCU",
+            targetScore: 2100,
+            timeLimit: 2,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 37,
+            difficulty: difficulty,
+            word: "VERİTABANI",
+            targetScore: 2150,
+            timeLimit: 2,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 38,
+            difficulty: difficulty,
+            word: "AĞLAR",
+            targetScore: 2200,
+            timeLimit: 1,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 39,
+            difficulty: difficulty,
+            word: "GÜVENLİK",
+            targetScore: 2250,
+            timeLimit: 1,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 40,
+            difficulty: difficulty,
+            word: "ŞİFRELEME",
+            targetScore: 2300,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 41,
+            difficulty: difficulty,
+            word: "KORUMA",
+            targetScore: 2350,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 42,
+            difficulty: difficulty,
+            word: "YEDEKLEME",
+            targetScore: 2400,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 43,
+            difficulty: difficulty,
+            word: "DEPOLAMA",
+            targetScore: 2450,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 44,
+            difficulty: difficulty,
+            word: "BULUT",
+            targetScore: 2500,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 45,
+            difficulty: difficulty,
+            word: "SERVİS",
+            targetScore: 2550,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 46,
+            difficulty: difficulty,
+            word: "BULUT",
+            targetScore: 2600,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 47,
+            difficulty: difficulty,
+            word: "YAYINLAMA",
+            targetScore: 2650,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 48,
+            difficulty: difficulty,
+            word: "GÜNCELLEME",
+            targetScore: 2700,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 49,
+            difficulty: difficulty,
+            word: "VERSİYON",
+            targetScore: 2750,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
+          LevelData(
+            level: 50,
+            difficulty: difficulty,
+            word: "SÜRÜM",
+            targetScore: 3000,
+            timeLimit: 0,
+            hasMovingSlots: true,
+          ),
         ];
     }
   }
@@ -954,7 +1549,6 @@ void main() async {
   await PlayerLevel.init();
   await DailyRewardSystem.init();
   await SoundManager().init();
-  await AdMobHelper.initialize();
   await IAPService.initialize(); // In-app purchase başlat
   runApp(const DragDropApp());
 }
@@ -1002,8 +1596,6 @@ class MainMenuPage extends StatefulWidget {
 class _MainMenuPageState extends State<MainMenuPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  BannerAd? _bannerAd;
-  bool _isBannerAdReady = false;
   late ConfettiController _confettiController;
 
   // Test modu için gizli sayaç
@@ -1020,7 +1612,6 @@ class _MainMenuPageState extends State<MainMenuPage>
     _confettiController = ConfettiController(
       duration: Duration(milliseconds: UIConstants.confettiDuration),
     );
-    _loadBannerAd();
 
     // Açılış kontrollerini çalıştır
     _performStartupChecks();
@@ -1033,18 +1624,18 @@ class _MainMenuPageState extends State<MainMenuPage>
       await AppRatingSystem.incrementLaunchCount();
 
       // Kısa bir gecikme sonrası kontrolleri yap
-      await Future.delayed(Duration(milliseconds: PromoConstants.dailyRewardDelayMs));
+      await Future.delayed(
+        Duration(milliseconds: PromoConstants.dailyRewardDelayMs),
+      );
 
       // 1. Günlük ödül kontrolü
       await _checkAndShowDailyReward();
 
       // 2. Rating isteği kontrolü (günlük ödülden sonra)
-      await Future.delayed(Duration(milliseconds: PromoConstants.ratingPromoDelayMs));
+      await Future.delayed(
+        Duration(milliseconds: PromoConstants.ratingPromoDelayMs),
+      );
       await _checkAndShowRatingPrompt();
-
-      // 3. Reklam kaldırma teklifi kontrolü
-      await Future.delayed(Duration(milliseconds: PromoConstants.removeAdsPromoDelayMs));
-      await _checkAndShowRemoveAdsPromotion();
     } catch (e) {
       print('Başlangıç kontrolleri hatası: $e');
       // Hata olsa bile uygulama çalışmaya devam etsin
@@ -1071,80 +1662,9 @@ class _MainMenuPageState extends State<MainMenuPage>
     }
   }
 
-  // Reklam kaldırma teklifi kontrolü ve gösterimi
-  Future<void> _checkAndShowRemoveAdsPromotion() async {
-    try {
-      // Önce abonelik kontrolü - zaten varsa gösterme
-      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-      if (hasSubscription) return;
-
-      final prefs = await SharedPreferences.getInstance();
-      final lastShownTime = prefs.getInt('remove_ads_promo_last_shown') ?? 0;
-      final showCount = prefs.getInt('remove_ads_promo_count') ?? 0;
-      final currentTime = DateTime.now().millisecondsSinceEpoch;
-      
-      // Promosyon gösterme koşulları
-      const threeDaysInMs = PromoConstants.removeAdsPromoDays * 24 * 60 * 60 * 1000;
-      if (showCount < PromoConstants.removeAdsPromoMaxShows && 
-          (currentTime - lastShownTime) > threeDaysInMs && 
-          mounted) {
-        await prefs.setInt('remove_ads_promo_last_shown', currentTime);
-        await prefs.setInt('remove_ads_promo_count', showCount + 1);
-        _showRemoveAdsPromotionDialog();
-      }
-    } catch (e) {
-      print('Reklam kaldırma teklifi kontrol hatası: $e');
-    }
-  }
-
-  void _loadBannerAd() async {
-    try {
-      // Reklamsız abonelik varsa reklam yükleme
-      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-      if (hasSubscription) {
-        if (mounted) {
-          setState(() {
-            _isBannerAdReady = false;
-          });
-        }
-        return;
-      }
-
-      _bannerAd = BannerAd(
-        adUnitId: AdMobHelper.bannerAdUnitId,
-        request: const AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            if (mounted) {
-              setState(() {
-                _isBannerAdReady = true;
-              });
-            }
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Banner reklam yüklenemedi: $err');
-            _isBannerAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
-
-      _bannerAd!.load();
-    } catch (e) {
-      print('Banner reklam yükleme hatası: $e');
-      if (mounted) {
-        setState(() {
-          _isBannerAdReady = false;
-        });
-      }
-    }
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
-    _bannerAd?.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -1655,16 +2175,6 @@ class _MainMenuPageState extends State<MainMenuPage>
 
                       const SizedBox(height: 10),
 
-                      // AdMob Banner Reklamı
-                      if (_isBannerAdReady && _bannerAd != null)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 5),
-                          height: 55,
-                          child: AdWidget(ad: _bannerAd!),
-                        )
-                      else
-                        const SizedBox(height: 10),
-
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -1754,65 +2264,6 @@ class _MainMenuPageState extends State<MainMenuPage>
       context: context,
       barrierDismissible: false,
       builder: (ctx) => DailyRewardDialog(onClaimed: () => setState(() {})),
-    );
-  }
-
-  void _showRemoveAdsPromotionDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Column(
-          children: [
-            Text('🎯', style: TextStyle(fontSize: 50)),
-            SizedBox(height: 10),
-            Text(
-              'Sınırsız Oyun Deneyimi!',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        content: const Text(
-          'Reklamları kaldırarak kesintisiz, sınırsız oyun deneyimi yaşamak ister misiniz?\n\n✨ Reklamsız oyun\n⚡ Daha hızlı yükleme\n💎 Özel bonuslar',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15),
-        ),
-        actionsAlignment: MainAxisAlignment.spaceEvenly,
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Daha Sonra',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              // Elmas mağazasını aç (abonelik seçeneği de burada)
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GemStorePage(),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: const Text(
-              '🚀 Hemen İncele',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -2578,7 +3029,11 @@ class LevelSelectPage extends StatelessWidget {
                             ),
                           if (level.hasMovingSlots) const SizedBox(width: 4),
                           if (level.hasMovingSlots)
-                            const Icon(Icons.waves, size: 13, color: Colors.blue),
+                            const Icon(
+                              Icons.waves,
+                              size: 13,
+                              color: Colors.blue,
+                            ),
                         ],
                       ),
                     ],
@@ -2633,10 +3088,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   async.Timer? _slowTimer;
   async.Timer? _speedTimer;
 
-  // Banner reklam
-  BannerAd? _bannerAd;
-  bool _isBannerAdReady = false;
-
   @override
   void initState() {
     super.initState();
@@ -2644,7 +3095,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: UIConstants.mediumAnimation),
     );
-    _loadBannerAd();
 
     _game = BubbleGame(
       difficulty: widget.difficulty,
@@ -2673,16 +3123,21 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           _isGoldActive = true;
         });
         _goldTimer?.cancel();
-        _goldTimer = async.Timer(Duration(seconds: GameConstants.goldBalloonDuration), () {
-          if (mounted) {
-            setState(() {
-              _isGoldActive = false;
-            });
-          }
-        });
+        _goldTimer = async.Timer(
+          Duration(seconds: GameConstants.goldBalloonDuration),
+          () {
+            if (mounted) {
+              setState(() {
+                _isGoldActive = false;
+              });
+            }
+          },
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("🌟 2x Puan Aktif! (${GameConstants.goldBalloonDuration} saniye)"),
+            content: Text(
+              "🌟 2x Puan Aktif! (${GameConstants.goldBalloonDuration} saniye)",
+            ),
             duration: SnackBarDurations.short,
             backgroundColor: Colors.amber,
           ),
@@ -2876,7 +3331,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       _wordsCompleted++;
 
       // Para kazan (gold aktif ise 2x)
-      int coinsToAdd = GameConstants.baseCoins + (_combo * GameConstants.comboCoinsBonus);
+      int coinsToAdd =
+          GameConstants.baseCoins + (_combo * GameConstants.comboCoinsBonus);
       if (_isGoldActive) {
         coinsToAdd *= GameConstants.goldMultiplier;
       }
@@ -3241,51 +3697,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     _goldTimer?.cancel();
     _slowTimer?.cancel();
     _speedTimer?.cancel();
-    _bannerAd?.dispose();
     super.dispose();
-  }
-
-  void _loadBannerAd() async {
-    try {
-      // Reklamsız abonelik varsa reklam yükleme
-      final hasSubscription = await IAPService.hasActiveNoAdsSubscription();
-      if (hasSubscription) {
-        if (mounted) {
-          setState(() {
-            _isBannerAdReady = false;
-          });
-        }
-        return;
-      }
-
-      _bannerAd = BannerAd(
-        adUnitId: AdMobHelper.bannerAdUnitId,
-        request: const AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            if (mounted) {
-              setState(() {
-                _isBannerAdReady = true;
-              });
-            }
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Oyun banner reklam yüklenemedi: $err');
-            _isBannerAdReady = false;
-            ad.dispose();
-          },
-        ),
-      );
-      _bannerAd!.load();
-    } catch (e) {
-      print('Banner reklam yükleme hatası: $e');
-      if (mounted) {
-        setState(() {
-          _isBannerAdReady = false;
-        });
-      }
-    }
   }
 
   @override
@@ -3526,19 +3938,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
-          // Banner Reklam - Alt kısımda
-          if (_isBannerAdReady && _bannerAd != null)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 50,
-                color: Colors.black,
-                child: AdWidget(ad: _bannerAd!),
-              ),
-            ),
         ],
       ),
     );
@@ -3665,7 +4064,7 @@ class BubbleGame extends FlameGame with HasCollisionDetection {
     // Ekran genişliğine ve kelime uzunluğuna göre dinamik slot ayarları
     double maxWidth = size.x - 40; // Ekran genişliği - kenar boşlukları
     double slotSpacing;
-    
+
     if (currentWord.length <= 5) {
       slotSpacing = difficulty == GameDifficulty.kolay ? 70 : 60;
     } else if (currentWord.length <= 7) {
@@ -3676,7 +4075,7 @@ class BubbleGame extends FlameGame with HasCollisionDetection {
       if (slotSpacing > 45) slotSpacing = 45;
       if (slotSpacing < 35) slotSpacing = 35;
     }
-    
+
     double startX =
         size.x / 2 - (currentWord.length * slotSpacing) / 2 + (slotSpacing / 2);
 
@@ -4072,11 +4471,7 @@ class TargetSlot extends PositionComponent {
   final double slotSize;
   bool isFilled = false;
 
-  TargetSlot({
-    required this.index,
-    required this.char,
-    this.slotSize = 50,
-  }) {
+  TargetSlot({required this.index, required this.char, this.slotSize = 50}) {
     size = Vector2(slotSize, slotSize * 1.2);
     anchor = Anchor.center;
   }
@@ -4356,16 +4751,12 @@ class _LifeShopPageState extends State<LifeShopPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              // Gerçek uygulama için in-app purchase
-              // Şimdilik demo olarak elmas ekle
-              await CurrencyManager.addGems(gems);
-              if (mounted) {
-                setState(() {});
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$gems elmas eklendi! (Demo)')),
-                );
-              }
+              Navigator.pop(context); // Dialog'u kapat
+              // Gerçek GemStorePage'e yönlendir
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GemStorePage()),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -4497,7 +4888,97 @@ class _LifeShopPageState extends State<LifeShopPage> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
+
+              // Restore Purchase Butonu - BELIRGIN
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.orange.shade400,
+                        Colors.deepOrange.shade500,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.4),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15),
+                      onTap: () async {
+                        try {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (ctx) => const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+
+                          await IAPService.restorePurchases();
+
+                          if (mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  '✅ Satın alımlarınız geri yüklendi!',
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Geri yükleme hatası: $e'),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.restore, color: Colors.white, size: 24),
+                            SizedBox(width: 10),
+                            Text(
+                              'Satın Alımları Geri Yükle',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 15),
 
               // Can paketleri
               Expanded(
@@ -4670,40 +5151,42 @@ class _GemStorePageState extends State<GemStorePage> {
   // Elmas paketleri (sadece gerçek parayla alınabilir)
   final List<Map<String, dynamic>> gemPackages = [
     {
-      'gems': 100,
-      'price': '₺29.99',
-      'priceValue': 29.99,
+      'gems': 50,
+      'price': '₺15.99',
+      'priceValue': 15.99,
       'icon': '💎',
-      'title': '100 Elmas',
+      'title': '50 Elmas',
       'description': 'Başlangıç paketi',
     },
     {
-      'gems': 250,
-      'price': '₺49.99',
-      'priceValue': 49.99,
+      'gems': 100,
+      'price': '₺19.99',
+      'priceValue': 19.99,
       'icon': '💎',
-      'title': '250 Elmas',
+      'title': '100 Elmas + 10 Bonus',
       'description': 'Popüler seçim',
+      'bonus': 10,
     },
     {
-      'gems': 500,
-      'price': '₺79.99',
-      'priceValue': 79.99,
+      'gems': 200,
+      'price': '₺29.99',
+      'priceValue': 29.99,
       'icon': '💎',
-      'title': '500 Elmas',
+      'title': '200 Elmas + 30 Bonus',
       'description': 'En iyi değer',
+      'bonus': 30,
     },
   ];
 
   Future<void> _purchaseGems(int gems, int bonus, double price) async {
     // Ürün ID'sini belirle
     String productId;
-    if (gems == 100) {
+    if (gems == 50) {
+      productId = IAPService.gems50;
+    } else if (gems == 100) {
       productId = IAPService.gems100;
-    } else if (gems == 250) {
-      productId = IAPService.gems250;
-    } else if (gems == 500) {
-      productId = IAPService.gems500;
+    } else if (gems == 200) {
+      productId = IAPService.gems200;
     } else {
       return;
     }
@@ -4755,42 +5238,6 @@ class _GemStorePageState extends State<GemStorePage> {
     }
   }
 
-  Future<void> _restorePurchases() async {
-    try {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => const Center(child: CircularProgressIndicator()),
-      );
-
-      await IAPService.restorePurchases();
-
-      if (mounted) {
-        Navigator.pop(context); // Loading dialog'u kapat
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Satın alımları geri yükleme tamamlandı!'),
-            duration: SnackBarDurations.short,
-            backgroundColor: Colors.green,
-          ),
-        );
-        // Sayfayı yenile
-        setState(() {});
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // Loading dialog'u kapat
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Hata: $e'),
-            duration: SnackBarDurations.short,
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
   void _showSuccessDialog(int gems, int bonus) {
     showDialog(
       context: context,
@@ -4824,6 +5271,8 @@ class _GemStorePageState extends State<GemStorePage> {
       ),
     );
   }
+
+  // Ebeveyn doğrulaması kodu tamamen kaldırıldı
 
   @override
   Widget build(BuildContext context) {
@@ -4885,6 +5334,96 @@ class _GemStorePageState extends State<GemStorePage> {
                 ),
               ),
 
+              // Restore Purchase Butonu - BELIRGIN
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.orange.shade400,
+                        Colors.deepOrange.shade500,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.4),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15),
+                      onTap: () async {
+                        try {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (ctx) => const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+
+                          await IAPService.restorePurchases();
+
+                          if (mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  '✅ Satın alımlarınız geri yüklendi!',
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Geri yükleme hatası: $e'),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.restore, color: Colors.white, size: 24),
+                            SizedBox(width: 10),
+                            Text(
+                              'Satın Alımları Geri Yükle',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
               // Bilgi kartı
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -4917,7 +5456,7 @@ class _GemStorePageState extends State<GemStorePage> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
 
               // Elmas paketleri
               Expanded(
@@ -5098,30 +5637,13 @@ class _GemStorePageState extends State<GemStorePage> {
               // Alt bilgi
               Container(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Text(
-                      '🔒 Güvenli ödeme ile App Store/Play Store üzerinden satın alınır',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    // Restore Purchases Button
-                    TextButton(
-                      onPressed: _restorePurchases,
-                      child: Text(
-                        'Satın Alımları Geri Yükle',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 12,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  '🔒 Güvenli ödeme sistemi',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],
@@ -5669,6 +6191,89 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 ),
               ),
 
+            const SizedBox(height: 20),
+
+            // Restore Purchase Butonu - BELIRGIN
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.orange.shade400, Colors.deepOrange.shade500],
+                ),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: () async {
+                    try {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (ctx) => const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        ),
+                      );
+
+                      await IAPService.restorePurchases();
+
+                      if (mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('✅ Satın alımlarınız geri yüklendi!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        // Abonelik durumunu yeniden kontrol et
+                        await _checkSubscription();
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Geri yükleme hatası: $e'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.restore, color: Colors.white, size: 24),
+                        SizedBox(width: 10),
+                        Text(
+                          'Satın Alımları Geri Yükle',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 25),
 
             // Ses ve müzik ayarları
@@ -5726,26 +6331,6 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Hakkında ve Gizlilik Politikası
-            TextButton.icon(
-              onPressed: _showAboutDialog,
-              icon: const Icon(Icons.info_outline, color: Colors.blue),
-              label: const Text(
-                "Hakkında",
-                style: TextStyle(color: Colors.blue, fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton.icon(
-              onPressed: _showPrivacyPolicy,
-              icon: const Icon(Icons.security, color: Colors.green),
-              label: const Text(
-                "Gizlilik Politikası",
-                style: TextStyle(color: Colors.green, fontSize: 16),
               ),
             ),
           ],
@@ -5815,143 +6400,6 @@ class _SettingsSheetState extends State<SettingsSheet> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showAboutDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('ℹ️ Hakkında'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Kelime Avcısı',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Sürüm: 1.0.0',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      'Yapımcı: Beldia Digital',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Telif Hakkı © 2025 Tüm Hakları Saklıdır.',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'Kelime Avcısı, eğlenceli ve eğitici bir kelime oyunudur. Oyunu oynayarak sözcük bilginizi artırabilir ve seviye atabilirsiniz.',
-                style: TextStyle(fontSize: 14, height: 1.6),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Kapat'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPrivacyPolicy() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('🔒 Gizlilik Politikası'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildPrivacySection(
-                'Toplanan Veriler',
-                '• Oyun ilerleme ve puanları (cihazınızda saklanır)\n• Başarımlar ve ödüller\n• Kullanıcı tercihler (ses, müzik)',
-              ),
-              const SizedBox(height: 15),
-              _buildPrivacySection(
-                'Üçüncü Taraf Hizmetleri',
-                '• Google AdMob: Reklam gösterimi\n• Apple App Store: Satın alma işlemleri\n• Google Play Store: Satın alma işlemleri',
-              ),
-              const SizedBox(height: 15),
-              _buildPrivacySection(
-                'Veri Paylaşımı',
-                '• Oyun verileri sadece cihazınızda saklanır\n• Google AdMob, reklam sunumu için anonimleştirilmiş veriler kullanabilir\n• Üçüncü taraf hizmetleri kendi gizlilik politikalarına uygun olarak verileri işler',
-              ),
-              const SizedBox(height: 15),
-              _buildPrivacySection(
-                'Veri Güvenliği',
-                '• Tüm veriler yerel olarak cihazınızda saklanır\n• Hiçbir bulut sunucusuna gönderilmez\n• GDPR ve App Store gizlilik gerekliliklerine uyumludur',
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'Son Güncelleme: Aralık 2025',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Kapat'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPrivacySection(String title, String content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          content,
-          style: const TextStyle(fontSize: 13, height: 1.5),
-        ),
-      ],
     );
   }
 }

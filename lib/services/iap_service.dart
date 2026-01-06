@@ -8,17 +8,17 @@ class IAPService {
   static StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   // Elmas paket ID'leri (App Store Connect'te tanımlanmalı)
+  static const String gems50 = 'kelimeavcisi_50gems';
   static const String gems100 = 'kelimeavcisi_100gems';
-  static const String gems250 = 'kelimeavcisi_250gems';
-  static const String gems500 = 'kelimeavcisi_500gems';
+  static const String gems200 = 'kelimeavcisi_200gems';
 
   // Abonelik ID'si
   static const String subscriptionNoAds = 'kelimeavcisi_noads_monthly';
 
   static const Set<String> _productIds = {
+    gems50,
     gems100,
-    gems250,
-    gems500,
+    gems200,
     subscriptionNoAds,
   };
 
@@ -83,14 +83,14 @@ class IAPService {
     int gemsToAdd = 0;
 
     switch (purchase.productID) {
+      case gems50:
+        gemsToAdd = 50;
+        break;
       case gems100:
-        gemsToAdd = 100;
+        gemsToAdd = 110; // 100 + 10 bonus
         break;
-      case gems250:
-        gemsToAdd = 250;
-        break;
-      case gems500:
-        gemsToAdd = 500;
+      case gems200:
+        gemsToAdd = 230; // 200 + 30 bonus
         break;
       case subscriptionNoAds:
         // Reklamsız aboneliği aktifleştir
@@ -130,6 +130,16 @@ class IAPService {
     }
   }
 
+  // Satın almaları geri yükle (public)
+  static Future<void> restorePurchases() async {
+    try {
+      await _instance.restorePurchases();
+    } catch (e) {
+      print('Error restoring purchases: $e');
+      rethrow;
+    }
+  }
+
   // Satın alma başlat
   static Future<bool> buyProduct(String productId) async {
     if (!_isAvailable) {
@@ -137,19 +147,16 @@ class IAPService {
       return false;
     }
 
-    final ProductDetails? product = _products.firstWhere(
-      (p) => p.id == productId,
-      orElse: () => throw Exception('Product not found: $productId'),
-    );
-
-    if (product == null) {
-      print('Product not found: $productId');
-      return false;
-    }
-
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
-
     try {
+      final product = _products.firstWhere(
+        (p) => p.id == productId,
+        orElse: () => throw Exception('Product not found: $productId'),
+      );
+
+      final PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: product,
+      );
+
       // Abonelik ise buyNonConsumable, elmas paketi ise buyConsumable kullan
       if (productId == subscriptionNoAds) {
         return await _instance.buyNonConsumable(purchaseParam: purchaseParam);
@@ -159,17 +166,6 @@ class IAPService {
     } catch (e) {
       print('Error buying product: $e');
       return false;
-    }
-  }
-
-  // Satın almaları geri yükle
-  static Future<void> restorePurchases() async {
-    try {
-      await _instance.restorePurchases();
-      print('Purchases restored');
-    } catch (e) {
-      print('Error restoring purchases: $e');
-      rethrow;
     }
   }
 

@@ -1,12 +1,13 @@
-# 📱 KELIME AVCISI - APP STORE YAYINLAMA REHBERİ
+# � App Store Submission Rehberi - Kelime Avcısı v1.0.0 Build 4
 
-**Tarih**: 11 Aralık 2025  
-**Bundle ID**: com.beldiadigital.kelimeavcisi  
-**Version**: 1.0.0 (Build 1)
+**Tarih:** 25 Aralık 2025  
+**Sürüm:** 1.0.0 Build 4  
+**Status:** ✅ iOS Build Tamamlandı (22.7MB)  
+**Next:** Xcode Archive → Upload → Submit
 
 ---
 
-## ✅ ÖN HAZIRLIK KONTROL LİSTESİ
+## 📋 Xcode Archive & Upload Adımları
 
 ### Kod Hazırlığı
 - [x] Test mode kapatıldı (AdMobHelper.isTestMode = false)
