@@ -12,14 +12,10 @@ class IAPService {
   static const String gems200 = 'com.kelimeavcisi.gems200';
   static const String gems500 = 'com.kelimeavcisi.gems500';
 
-  // Abonelik ID'si
-  static const String subscriptionNoAds = 'kelimeavcisi_noads_monthly';
-
   static const Set<String> _productIds = {
     gems100,
     gems200,
     gems500,
-    subscriptionNoAds,
   };
 
   static List<ProductDetails> _products = [];
@@ -78,7 +74,7 @@ class IAPService {
     }
   }
 
-  // Ürünü doğrula ve elmasları ekle veya aboneliği aktifleştir
+  // Ürünü doğrula ve elmasları ekle
   static Future<void> _verifyAndDeliverProduct(PurchaseDetails purchase) async {
     int gemsToAdd = 0;
 
@@ -92,10 +88,8 @@ class IAPService {
       case gems500:
         gemsToAdd = 500;
         break;
-      case subscriptionNoAds:
-        // Reklamsız aboneliği aktifleştir
-        await activateNoAdsSubscription();
-        print('No-ads subscription activated');
+      default:
+        print('Unknown product: ${purchase.productID}');
         return;
     }
 
@@ -103,22 +97,6 @@ class IAPService {
       await CurrencyManager.addGems(gemsToAdd);
       print('Added $gemsToAdd gems for purchase: ${purchase.productID}');
     }
-  }
-
-  // Reklamsız aboneliği aktifleştir
-  static Future<void> activateNoAdsSubscription() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('noAdsSubscription', true);
-    await prefs.setInt(
-      'noAdsSubscriptionTime',
-      DateTime.now().millisecondsSinceEpoch,
-    );
-  }
-
-  // Reklamsız abonelik aktif mi kontrol et
-  static Future<bool> hasActiveNoAdsSubscription() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('noAdsSubscription') ?? false;
   }
 
   // Bekleyen satın almaları kontrol et
@@ -157,12 +135,7 @@ class IAPService {
         productDetails: product,
       );
 
-      // Abonelik ise buyNonConsumable, elmas paketi ise buyConsumable kullan
-      if (productId == subscriptionNoAds) {
-        return await _instance.buyNonConsumable(purchaseParam: purchaseParam);
-      } else {
-        return await _instance.buyConsumable(purchaseParam: purchaseParam);
-      }
+      return await _instance.buyConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       print('Error buying product: $e');
       return false;
