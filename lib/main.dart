@@ -1514,21 +1514,21 @@ class PowerUp {
     return [
       PowerUp(
         type: PowerUpType.ampul,
-        count: 3,
+        count: 1,
         icon: "💡",
         description: "Sonraki harfi göster",
         color: Colors.amber,
       ),
       PowerUp(
         type: PowerUpType.buz,
-        count: 2,
+        count: 1,
         icon: "❄️",
         description: "Balonları 5sn durdur",
         color: Colors.cyan,
       ),
       PowerUp(
         type: PowerUpType.miknatIs,
-        count: 2,
+        count: 1,
         icon: "🧲",
         description: "Doğru harfi çek",
         color: Colors.purple,
@@ -1578,7 +1578,230 @@ class DragDropApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const MainMenuPage(),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+// ==========================================
+// SPLASH SCREEN
+// ==========================================
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimationController _rotateController;
+  late AnimationController _glowController;
+
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _rotateAnimation;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Ana animasyon controller
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    // Rotate animasyon controller
+    _rotateController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
+    // Glow animasyon controller
+    _glowController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+
+    _rotateAnimation = Tween<double>(begin: 0.0, end: 0.1).animate(
+      CurvedAnimation(parent: _rotateController, curve: Curves.easeInOut),
+    );
+
+    _glowAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    );
+
+    // Animasyonları başlat
+    _controller.forward();
+    _rotateController.repeat(reverse: true);
+    _glowController.repeat(reverse: true);
+
+    // AZALTILDI: 500ms sonra ana menüye geç (beyaz ekran önlenir)
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MainMenuPage()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _rotateController.dispose();
+    _glowController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF667eea),
+              Color(0xFF764ba2),
+              Color(0xFFF093FB),
+              Color(0xFFF5576C),
+            ],
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Oyun logosu/ikonu - Gerçek ikon ile
+                  AnimatedBuilder(
+                    animation: Listenable.merge([
+                      _rotateAnimation,
+                      _glowAnimation,
+                    ]),
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: _rotateAnimation.value,
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(
+                                  0.3 * _glowAnimation.value,
+                                ),
+                                blurRadius: 40 * _glowAnimation.value,
+                                spreadRadius: 10 * _glowAnimation.value,
+                              ),
+                              BoxShadow(
+                                color: Colors.purple.withOpacity(
+                                  0.4 * _glowAnimation.value,
+                                ),
+                                blurRadius: 60 * _glowAnimation.value,
+                                spreadRadius: 5 * _glowAnimation.value,
+                              ),
+                              BoxShadow(
+                                color: Colors.pink.withOpacity(
+                                  0.3 * _glowAnimation.value,
+                                ),
+                                blurRadius: 80 * _glowAnimation.value,
+                                spreadRadius: 3 * _glowAnimation.value,
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(25),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 20,
+                                  spreadRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                'assets/icon.png',
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 40),
+                  // Oyun adı - Animasyonlu
+                  AnimatedBuilder(
+                    animation: _glowAnimation,
+                    builder: (context, child) {
+                      return Text(
+                        'Kelime Avcısı',
+                        style: TextStyle(
+                          fontSize: 42,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          letterSpacing: 3,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 15 * _glowAnimation.value,
+                              color: Colors.white.withOpacity(
+                                0.6 * _glowAnimation.value,
+                              ),
+                              offset: const Offset(0, 0),
+                            ),
+                            const Shadow(
+                              blurRadius: 10,
+                              color: Colors.black26,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // Alt yazı
+                  Text(
+                    'Eğlenceli Kelime Oyunu',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white.withOpacity(0.9),
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1628,10 +1851,10 @@ class _MainMenuPageState extends State<MainMenuPage>
         Duration(milliseconds: PromoConstants.dailyRewardDelayMs),
       );
 
-      // 1. Günlük ödül kontrolü
-      await _checkAndShowDailyReward();
+      // 1. Günlük ödül kontrolü - KALDIRILDI
+      // await _checkAndShowDailyReward();
 
-      // 2. Rating isteği kontrolü (günlük ödülden sonra)
+      // 2. Rating isteği kontrolü
       await Future.delayed(
         Duration(milliseconds: PromoConstants.ratingPromoDelayMs),
       );
@@ -1639,14 +1862,6 @@ class _MainMenuPageState extends State<MainMenuPage>
     } catch (e) {
       print('Başlangıç kontrolleri hatası: $e');
       // Hata olsa bile uygulama çalışmaya devam etsin
-    }
-  }
-
-  // Günlük ödül kontrolü ve gösterimi
-  Future<void> _checkAndShowDailyReward() async {
-    if (DailyRewardSystem.canClaimToday && mounted) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      _showDailyReward();
     }
   }
 
@@ -1736,10 +1951,31 @@ class _MainMenuPageState extends State<MainMenuPage>
                                     const SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: () => _showGemStore(),
-                                      child: _buildCurrencyDisplay(
-                                        icon: "💎",
-                                        value: CurrencyManager.gems,
-                                        color: Colors.cyan,
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          _buildCurrencyDisplay(
+                                            icon: "💎",
+                                            value: CurrencyManager.gems,
+                                            color: Colors.cyan,
+                                          ),
+                                          Positioned(
+                                            top: -5,
+                                            right: -5,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(2),
+                                              decoration: const BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: Colors.white,
+                                                size: 12,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -2952,17 +3188,14 @@ class GamePage extends StatefulWidget {
   _GamePageState createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
+class _GamePageState extends State<GamePage> {
   late BubbleGame _game;
   int _score = 0;
-  int _combo = 0;
   int _wordsCompleted = 0;
   int _mistakes = 0;
   int _timeSpent = 0;
   async.Timer? _gameTimer;
   List<PowerUp> _powerUps = PowerUp.getInitialPowerUps();
-  bool _showCombo = false;
-  late AnimationController _comboController;
 
   // Özel balon efektleri
   bool _isGoldActive = false; // 2x puan
@@ -2977,10 +3210,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _comboController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: UIConstants.mediumAnimation),
-    );
 
     _game = BubbleGame(
       difficulty: widget.difficulty,
@@ -3202,11 +3431,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     SoundManager().playSuccess();
 
     setState(() {
-      // Combo hesapla
-      _combo++;
+      // Combo sistemi kaldırıldı - sadece temel puan
       int baseScore = GameConstants.baseScore;
-      int comboBonus = _combo > 1 ? (_combo - 1) * GameConstants.comboBonus : 0;
-      int totalPoints = baseScore + comboBonus;
+      int totalPoints = baseScore;
 
       // Gold balon aktif ise 2x puan
       if (_isGoldActive) {
@@ -3217,40 +3444,27 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       _wordsCompleted++;
 
       // Para kazan (gold aktif ise 2x)
-      int coinsToAdd =
-          GameConstants.baseCoins + (_combo * GameConstants.comboCoinsBonus);
+      int coinsToAdd = GameConstants.baseCoins;
       if (_isGoldActive) {
         coinsToAdd *= GameConstants.goldMultiplier;
       }
       CurrencyManager.addCoins(coinsToAdd);
 
       // XP kazan
-      _awardXP(20 + (_combo * 5));
+      _awardXP(20);
 
       // Görev ilerletme
       QuestManager.updateProgress('daily_words_3', _wordsCompleted);
       QuestManager.updateProgress('weekly_words_25', _wordsCompleted);
 
-      if (_combo >= 3) {
-        QuestManager.updateProgress('daily_combo_3', 1);
-      }
-
       // Başarımları güncelle
       AchievementManager.updateProgress('first_word', _wordsCompleted);
       AchievementManager.updateProgress('ten_words', _wordsCompleted);
       AchievementManager.updateProgress('fifty_words', _wordsCompleted);
-      AchievementManager.updateProgress('combo_5', _combo);
-      AchievementManager.updateProgress('combo_10', _combo);
       AchievementManager.updateProgress('high_score_1000', _score);
 
       PlayerStats.addScore(totalPoints);
       PlayerStats.incrementWords();
-      PlayerStats.recordCombo(_combo);
-
-      // Combo ses efekti
-      if (_combo > 1) {
-        SoundManager().playCombo();
-      }
 
       // Seviye ilerlemesini kaydet
       if (widget.levelData != null) {
@@ -3261,15 +3475,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
         // Seviye tamamlandı dialogu göster
         _showLevelCompleteDialog();
-      }
-
-      // Combo animasyonu
-      if (_combo > 1) {
-        _showCombo = true;
-        _comboController.forward(from: 0);
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) setState(() => _showCombo = false);
-        });
       }
     });
   }
@@ -3308,9 +3513,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     // Yıldızları kaydet
     LevelStars.setStars(difficultyName, widget.levelData!.level, stars);
 
-    // Elmas kazan (yıldız sayısına göre)
+    // Coin kazan (yıldız sayısına göre) - Elmas sadece gerçek para ile alınabilir
     if (stars > 0) {
-      CurrencyManager.addGems(stars * GameConstants.gemsPerStar);
+      final coinsEarned = stars * 50; // Her yıldız için 50 coin
+      CurrencyManager.addCoins(coinsEarned);
     }
 
     // Mükemmel seviye başarımı
@@ -3447,22 +3653,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                       return const SizedBox.shrink();
                     },
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "En Yüksek Combo:",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "x$_combo",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -3536,7 +3726,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           children: [
             _buildStatRow("Skor", "$_score"),
             _buildStatRow("Kelime", "$_wordsCompleted"),
-            _buildStatRow("En Yüksek Combo", "$_combo"),
           ],
         ),
         actions: [
@@ -3578,7 +3767,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _comboController.dispose();
     _gameTimer?.cancel();
     _goldTimer?.cancel();
     _slowTimer?.cancel();
@@ -3779,51 +3967,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
               ),
             ),
           ),
-
-          // COMBO GÖSTERGESİ (Sağ üst, kelime sayacının üstünde)
-          if (_showCombo && _combo > 1)
-            Positioned(
-              top: 20,
-              right: 20,
-              child: ScaleTransition(
-                scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: _comboController,
-                    curve: Curves.elasticOut,
-                  ),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.orange, Colors.deepOrange],
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black26, blurRadius: 10),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text("🔥", style: TextStyle(fontSize: 20)),
-                      const SizedBox(width: 5),
-                      Text(
-                        "x$_combo",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -4776,96 +4919,6 @@ class _LifeShopPageState extends State<LifeShopPage> {
 
               const SizedBox(height: 15),
 
-              // Restore Purchase Butonu - BELIRGIN
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.orange.shade400,
-                        Colors.deepOrange.shade500,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orange.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15),
-                      onTap: () async {
-                        try {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (ctx) => const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-
-                          await IAPService.restorePurchases();
-
-                          if (mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  '✅ Satın alımlarınız geri yüklendi!',
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Geri yükleme hatası: $e'),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.restore, color: Colors.white, size: 24),
-                            SizedBox(width: 10),
-                            Text(
-                              'Satın Alımları Geri Yükle',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
               // Can paketleri
               Expanded(
                 child: ListView.builder(
@@ -5017,6 +5070,123 @@ class _LifeShopPageState extends State<LifeShopPage> {
                   },
                 ),
               ),
+
+              // Alt kısım - Restore butonu
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
+                child: Column(
+                  children: [
+                    // Restore butonu
+                    GestureDetector(
+                      onTap: () async {
+                        // Onay dialogu göster
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: const Row(
+                              children: [
+                                Icon(Icons.restore, color: Colors.orange),
+                                SizedBox(width: 10),
+                                Text('Geri Yükle'),
+                              ],
+                            ),
+                            content: const Text(
+                              'Daha önce yaptığınız satın alımları geri yüklemek istiyor musunuz?',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: const Text('Hayır'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(ctx, true),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                ),
+                                child: const Text('Evet'),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true && mounted) {
+                          try {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (ctx) => const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+
+                            await IAPService.restorePurchases();
+
+                            if (mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    '✅ Satın alımlarınız geri yüklendi!',
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Geri yükleme hatası: $e'),
+                                  backgroundColor: Colors.orange,
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.restore, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Satın Alımları Geri Yükle',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -5062,6 +5232,82 @@ class _GemStorePageState extends State<GemStorePage> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    // Purchase callback'lerini ayarla
+    IAPService.onPurchaseSuccess = _handlePurchaseSuccess;
+    IAPService.onPurchaseError = _handlePurchaseError;
+  }
+
+  @override
+  void dispose() {
+    // Callback'leri temizle
+    IAPService.onPurchaseSuccess = null;
+    IAPService.onPurchaseError = null;
+    super.dispose();
+  }
+
+  void _handlePurchaseSuccess(String productId, int gemsAdded) {
+    print(
+      '🎉 Purchase success callback - Product: $productId, Gems: $gemsAdded',
+    );
+
+    if (!mounted) return;
+
+    // Loading dialog'unu kapat
+    Navigator.of(context, rootNavigator: true).pop();
+
+    // UI'ı güncelle
+    setState(() {});
+
+    // Başarı mesajı göster
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('✅ Satın Alma Başarılı!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('💎', style: TextStyle(fontSize: 60)),
+            const SizedBox(height: 20),
+            Text(
+              '$gemsAdded Elmas',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Yeni bakiyeniz: ${CurrencyManager.gems} 💎',
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+            },
+            child: const Text('Harika!'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handlePurchaseError(String error) {
+    print('❌ Purchase error callback: $error');
+
+    if (!mounted) return;
+
+    // Loading dialog'unu kapat
+    Navigator.of(context, rootNavigator: true).pop();
+
+    // Hata mesajı göster
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('❌ $error'), backgroundColor: Colors.red),
+    );
+  }
+
   Future<void> _purchaseGems(int gems, int bonus, double price) async {
     // Ürün ID'sini belirle
     String productId;
@@ -5079,81 +5325,132 @@ class _GemStorePageState extends State<GemStorePage> {
     if (!IAPService.isAvailable) {
       // Servis kullanılamıyorsa uyarı göster
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              '❌ Satın alma servisi şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.',
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.orange),
+                SizedBox(width: 10),
+                Text('Satın Alma Kullanılamıyor'),
+              ],
             ),
-            backgroundColor: Colors.red,
+            content: const Text(
+              'Satın alma servisi şu anda kullanılamıyor.\n\n'
+              '⚠️ ÖNEMLI:\n'
+              '• IAP Simulator\'de ÇALIŞMAZ\n'
+              '• Gerçek iPhone/iPad gerekir\n'
+              '• Settings → App Store → Sandbox hesabı girin\n'
+              '• Xcode StoreKit Configuration eklenmiş olmalı\n\n'
+              'Test için:\n'
+              '1. Gerçek cihaz bağlayın\n'
+              '2. Sandbox test hesabı ile giriş yapın\n'
+              '3. Uygulamayı çalıştırın',
+              style: TextStyle(fontSize: 13),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Tamam'),
+              ),
+            ],
           ),
         );
       }
       return;
     }
 
-    // Gerçek satın almayı başlat
+    // Ürünler yüklü mü kontrol et
+    if (IAPService.products.isEmpty) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red),
+                SizedBox(width: 10),
+                Text('Ürünler Bulunamadı'),
+              ],
+            ),
+            content: const Text(
+              'App Store\'dan ürünler yüklenemedi.\n\n'
+              '✅ Kontrol Listesi:\n'
+              '• App Store Connect\'te IAP ürünleri oluşturuldu mu?\n'
+              '• Product ID\'ler doğru mu?\n'
+              '  - com.kelimeavcisi.gems100\n'
+              '  - com.kelimeavcisi.gems200\n'
+              '  - com.kelimeavcisi.gems500\n'
+              '• Ürün durumu "Ready to Submit"?\n'
+              '• Paid Apps Agreement imzalandı mı?\n'
+              '• Xcode\'da StoreKit Configuration var mı?\n\n'
+              '📱 Gerçek cihazda sandbox ile test edin!',
+              style: TextStyle(fontSize: 12),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Tamam'),
+              ),
+            ],
+          ),
+        );
+      }
+      return;
+    }
+
+    // Loading göster
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: Colors.white),
+              SizedBox(height: 16),
+              Text(
+                'App Store satın alma açılıyor...',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Lütfen bekleyin...',
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
 
     try {
+      print('🛒 Starting purchase for $productId ($gems gems)');
       final success = await IAPService.buyProduct(productId);
 
-      if (mounted) {
-        Navigator.pop(context); // Loading dialog'u kapat
-
-        if (success) {
-          _showSuccessDialog(gems, bonus);
-        } else {
+      if (!success) {
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Satın alma başlatılamadı')),
+            const SnackBar(
+              content: Text('❌ Satın alma başlatılamadı'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }
+      // Success durumunda callback otomatik gelecek, loading dialog callback'te kapatılacak
     } catch (e) {
+      print('❌ Purchase exception: $e');
       if (mounted) {
-        Navigator.pop(context); // Loading dialog'u kapat
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Hata: $e')));
+        Navigator.of(context, rootNavigator: true).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('❌ Hata: $e'), backgroundColor: Colors.red),
+        );
       }
     }
-  }
-
-  void _showSuccessDialog(int gems, int bonus) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('✅ Satın Alma Başarılı!'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('💎', style: TextStyle(fontSize: 60)),
-            const SizedBox(height: 20),
-            Text(
-              '$gems Elmas',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Hesabınıza eklendi!',
-              style: TextStyle(color: Colors.grey[600], fontSize: 14),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pop(context); // Ana menüye dön
-            },
-            child: const Text('Harika!'),
-          ),
-        ],
-      ),
-    );
   }
 
   // Ebeveyn doğrulaması kodu tamamen kaldırıldı
@@ -5218,95 +5515,58 @@ class _GemStorePageState extends State<GemStorePage> {
                 ),
               ),
 
-              // Restore Purchase Butonu - BELIRGIN
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  width: double.infinity,
+              const SizedBox(height: 15),
+
+              // Sandbox bilgi kartı (sadece debug modda)
+              if (!IAPService.isAvailable || IAPService.products.isEmpty)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.orange.shade400,
-                        Colors.deepOrange.shade500,
-                      ],
-                    ),
+                    color: Colors.orange.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orange.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                    border: Border.all(
+                      color: Colors.orange.withOpacity(0.5),
+                      width: 2,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Test Bilgisi',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        IAPService.isAvailable
+                            ? 'Ürünler yüklenemedi. Gerçek cihazda sandbox hesabı ile test edin.'
+                            : 'IAP simulator\'de çalışmaz. Gerçek cihazda sandbox hesabı ile test edin.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15),
-                      onTap: () async {
-                        try {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (ctx) => const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-
-                          await IAPService.restorePurchases();
-
-                          if (mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  '✅ Satın alımlarınız geri yüklendi!',
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Geri yükleme hatası: $e'),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.restore, color: Colors.white, size: 24),
-                            SizedBox(width: 10),
-                            Text(
-                              'Satın Alımları Geri Yükle',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
-              ),
 
-              const SizedBox(height: 15),
+              if (!IAPService.isAvailable || IAPService.products.isEmpty)
+                const SizedBox(height: 15),
 
               // Bilgi kartı
               Container(
@@ -5520,7 +5780,10 @@ class _GemStorePageState extends State<GemStorePage> {
 
               // Alt bilgi ve Restore butonu
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
                 child: Column(
                   children: [
                     // Restore butonu
@@ -6111,6 +6374,36 @@ class _SettingsSheetState extends State<SettingsSheet> {
                   "${AchievementManager.unlockedCount}/${AchievementManager.achievements.length}",
             ),
             const SizedBox(height: 20),
+
+            // Bizi Değerlendir butonu
+            ElevatedButton.icon(
+              onPressed: () async {
+                await AppRatingSystem.openAppStore();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Değerlendirmeniz için teşekkürler! ⭐'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              },
+              icon: const Icon(Icons.star_rate),
+              label: const Text("Bizi Değerlendir"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 15,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
 
             ElevatedButton.icon(
               onPressed: () {
@@ -7043,47 +7336,23 @@ class _ThemesPageState extends State<ThemesPage> {
                   ),
                   if (!theme.isUnlocked) ...[
                     const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.amber.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            "🪙 ${theme.unlockCost}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "🪙 ${theme.unlockCost} veya 💎 ${theme.gemCost}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: 5),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.cyan.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            "💎 ${theme.gemCost}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ],

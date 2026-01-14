@@ -20,9 +20,11 @@ class CurrencyManager {
   }
 
   static Future<void> addGems(int amount) async {
+    print('💎 CurrencyManager: Adding $amount gems. Current: $_gems');
     _gems += amount;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('gems', _gems);
+    print('💎 CurrencyManager: New balance: $_gems (saved to prefs)');
   }
 
   static Future<bool> spendCoins(int amount) async {
@@ -111,12 +113,10 @@ class DailyReward {
         break;
       case 7:
         coins = 500;
-        gems = 10;
         break;
     }
 
     await CurrencyManager.addCoins(coins);
-    await CurrencyManager.addGems(gems);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('daily_streak', _currentStreak);

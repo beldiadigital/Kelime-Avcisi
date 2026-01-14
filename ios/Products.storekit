@@ -1,82 +1,75 @@
 {
-  "appPolicies" : {
-    "eula" : "",
-    "policies" : [
-      {
-        "locale" : "en_US",
-        "policyText" : "",
-        "policyURL" : ""
-      }
-    ]
-  },
-  "identifier" : "D31E3CEF",
+  "identifier" : "B8E5F8A7",
   "nonRenewingSubscriptions" : [
 
   ],
   "products" : [
     {
-      "displayPrice" : "29.99",
+      "displayPrice" : "0.99",
       "familyShareable" : false,
-      "internalID" : "6670391668",
+      "internalID" : "6670916401",
       "localizations" : [
         {
-          "description" : "100 Elmas Paketi",
+          "description" : "100 elmas paketi",
           "displayName" : "100 Elmas",
           "locale" : "tr"
         },
         {
-          "description" : "100 Gems Package",
+          "description" : "100 gems package",
           "displayName" : "100 Gems",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.kelimeavcisi.gems100",
-      "referenceName" : "100 Gems",
+      "referenceName" : "100_gems",
       "type" : "Consumable"
     },
     {
-      "displayPrice" : "49.99",
+      "displayPrice" : "1.99",
       "familyShareable" : false,
-      "internalID" : "6670391670",
+      "internalID" : "6670916402",
       "localizations" : [
         {
-          "description" : "200 Elmas",
+          "description" : "200 elmas paketi",
           "displayName" : "200 Elmas",
           "locale" : "tr"
         },
         {
-          "description" : "200 Gems",
+          "description" : "200 gems package",
           "displayName" : "200 Gems",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.kelimeavcisi.gems200",
-      "referenceName" : "200 Gems",
+      "referenceName" : "200_gems",
       "type" : "Consumable"
     },
     {
-      "displayPrice" : "79.99",
+      "displayPrice" : "4.99",
       "familyShareable" : false,
-      "internalID" : "6670391672",
+      "internalID" : "6670916403",
       "localizations" : [
         {
-          "description" : "500 Elmas",
+          "description" : "500 elmas paketi",
           "displayName" : "500 Elmas",
           "locale" : "tr"
         },
         {
-          "description" : "500 Gems",
+          "description" : "500 gems package",
           "displayName" : "500 Gems",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.kelimeavcisi.gems500",
-      "referenceName" : "500 Gems",
+      "referenceName" : "500_gems",
       "type" : "Consumable"
     }
   ],
   "settings" : {
+    "_applicationInternalID" : "6756412997",
+    "_developerTeamID" : "YOUR_TEAM_ID",
     "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 758074127.68325996,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -131,7 +124,7 @@
 
   ],
   "version" : {
-    "major" : 4,
+    "major" : 3,
     "minor" : 0
   }
 }
